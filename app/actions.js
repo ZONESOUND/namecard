@@ -184,6 +184,73 @@ export async function enrichSingleContactAction(id) {
     }
 }
 
+export async function enrichDraftAction(currData) {
+    const { getContacts } = await import('@/lib/storage');
+    // We still need all contacts to get existing tags
+    const contacts = await getContacts();
+
+    // Context: Get existing tags to encourage reuse
+    const allTags = new Set();
+    contacts.forEach(c => c.tags?.forEach(t => allTags.add(t)));
+    const existingTagsList = Array.from(allTags).slice(0, 50).join(', ');
+
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    try {
+        const prompt = `Your task is to **Validate, Correct, and Enrich** this NEW contact draft.
+        
+        **Draft Data**:
+        Name: ${currData.name}
+        Title: ${currData.title}
+        Company: ${currData.company}
+        Email: ${currData.email}
+        Existing System Tags: [${existingTagsList}]
+
+        **Instructions**:
+        1. **CORRECTION**: 
+           - Suggest corrections for potential OCR errors in Name, Title, Company.
+           
+        2. **ENRICHMENT**:
+           - **Identify the Person**: Check your internal knowledge.
+           - **Fallback**: Describe the **Organization's significance** and **Role**. 
+           - **Style**: Professional, objective, Traditional Chinese context.
+
+        3. **TAGGING**:
+           - Assign 3-5 relevant tags.
+           - **PRIORITY**: REUSE "Existing System Tags" if they fit.
+           - Tags should be English or Traditional Chinese (consistent with existing).
+
+        4. **OUTPUT**:
+           - Return JSON.
+           - NO email/phone in summary.
+        
+        Format:
+        {
+            "name": "Corrected Name",
+            "title": "Corrected Title",
+            "company": "Corrected Company",
+            "email": "Corrected Email",
+            "tags": ["Tag1", "Tag2"],
+            "aiSummary": "..."
+        }`;
+
+        const res = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [{ role: "user", content: prompt }],
+            response_format: { type: "json_object" }
+        });
+
+        const result = JSON.parse(res.choices[0].message.content);
+
+        return { success: true, result };
+
+    } catch (e) {
+        console.error("Draft enrichment failed", e);
+        return { success: false, error: e.message };
+    }
+}
+
 export async function batchEnrichAction() {
     // ... existing logic ...
     const { getContacts, saveContact } = await import('@/lib/storage');

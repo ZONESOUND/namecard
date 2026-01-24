@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { addContactAction, checkDuplicateAction } from '../actions';
-import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft } from 'lucide-react';
+import { addContactAction, checkDuplicateAction, enrichDraftAction } from '../actions';
+import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AddContactForm({ availableTags = [] }) {
@@ -137,6 +137,58 @@ export default function AddContactForm({ availableTags = [] }) {
     };
 
     const [isSaving, setIsSaving] = useState(false);
+    const [isEnriching, setIsEnriching] = useState(false);
+
+    const handleDraftEnrich = async () => {
+        if (isEnriching || !activeId) return;
+        setIsEnriching(true);
+
+        const activeItem = queue.find(i => i.id === activeId);
+        // Use current form values? 
+        // Problem: The user might have typed in the inputs but not "saved" to queue state yet if using defaultValue.
+        // Actually, the inputs have `onChange` that updates state: 
+        // `setQueue(prev => prev.map(item => item.id === activeId ? { ...item, data: { ...item.data, name: newName } } : item))`
+        // So `activeItem.data` SHOULD be up to date with what's typed.
+
+        if (!activeItem?.data) {
+            setIsEnriching(false);
+            return;
+        }
+
+        try {
+            const res = await enrichDraftAction(activeItem.data);
+            if (res.success && res.result) {
+                // Determine if tags changed
+                // Merge tags
+                let newTags = activeItem.data.tags || [];
+                if (res.result.tags && res.result.tags.length > 0) {
+                    const tagSet = new Set(newTags);
+                    res.result.tags.forEach(t => tagSet.add(t));
+                    newTags = Array.from(tagSet);
+                }
+
+                const enrichedData = {
+                    ...activeItem.data,
+                    name: res.result.name || activeItem.data.name,
+                    title: res.result.title || activeItem.data.title,
+                    company: res.result.company || activeItem.data.company,
+                    email: res.result.email || activeItem.data.email,
+                    tags: newTags,
+                    aiSummary: res.result.aiSummary || activeItem.data.aiSummary
+                };
+
+                updateItemStatus(activeId, activeItem.status, { data: enrichedData });
+                alert("AI Enrichment Complete!");
+            } else {
+                alert("Enrichment failed: " + res.error);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error running AI enrichment.");
+        } finally {
+            setIsEnriching(false);
+        }
+    };
 
     const handleSave = async (formData) => {
         if (isSaving) return; // Prevent double click
@@ -398,8 +450,19 @@ export default function AddContactForm({ availableTags = [] }) {
 
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between ml-1">
-                                                            <label className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest pl-1">AI Intelligence</label>
-                                                            <Sparkles className="text-[#5e52ff]" size={14} />
+                                                            <div className="flex items-center gap-2">
+                                                                <label className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest pl-1">AI Intelligence</label>
+                                                                <Sparkles className="text-[#5e52ff]" size={14} />
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                onClick={handleDraftEnrich} // Use the new handler
+                                                                disabled={isEnriching}
+                                                                className="flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-full transition-all font-bold border border-[#5e52ff]/20 cursor-pointer"
+                                                            >
+                                                                {isEnriching ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                                                                {isEnriching ? 'Analyzing...' : 'Refresh AI'}
+                                                            </button>
                                                         </div>
                                                         <textarea
                                                             key={activeId + 'ai'}
