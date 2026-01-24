@@ -1,9 +1,8 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// OpenAI client initialized per request to avoid build-time env check issues
+const apiKey = process.env.OPENAI_API_KEY;
 
 export async function POST(request) {
     try {
@@ -18,6 +17,9 @@ export async function POST(request) {
         const buffer = Buffer.from(await file.arrayBuffer());
         const base64Image = buffer.toString('base64');
         const dataUrl = `data:${file.type};base64,${base64Image}`;
+
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 
         const response = await openai.chat.completions.create({
             model: "gpt-4o",
