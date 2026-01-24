@@ -98,6 +98,11 @@ export async function enrichSingleContactAction(id) {
             }
         }
 
+        // Context: Get existing tags to encourage reuse
+        const allTags = new Set();
+        contacts.forEach(c => c.tags?.forEach(t => allTags.add(t)));
+        const existingTagsList = Array.from(allTags).slice(0, 50).join(', ');
+
         const prompt = `Your task is to **Validate, Correct, and Enrich** this contact.
         
         **Current Data**:
@@ -105,6 +110,7 @@ export async function enrichSingleContactAction(id) {
         Title: ${contact.title}
         Company: ${contact.company}
         Email: ${contact.email}
+        Existing System Tags: [${existingTagsList}]
 
         **Instructions**:
         1. **CORRECTION (High Priority)**: 
@@ -114,13 +120,15 @@ export async function enrichSingleContactAction(id) {
         2. **ENRICHMENT (Mandatory)**:
            - **Identify the Person**: Check your internal knowledge for this person.
            - **Fallback Strategy (CRITICAL)**: If you do NOT know the person, you **MUST** describe the **Organization's significance** and the **Role's responsibilities** instead. 
-             - Example: "As CEO of TSMC Foundation, this role likely leads major corporate social responsibility initiatives..."
-             - DO NOT return an empty summary. 
-             - DO NOT say "I don't know this person."
-           - **Style**: Professional, objective, Traditional Chinese.
-           - **Format**: Concise paragraph.
+           - **Style**: Professional, objective, Traditional Chinese context.
 
-        3. **OUTPUT**:
+        3. **TAGGING (New)**:
+           - Assign 3-5 relevant tags.
+           - **PRIORITY**: REUSE "Existing System Tags" if they fit (e.g. "Tech", "Art", "Music", "Curator").
+           - If no existing tag fits, create a NEW concise tag (e.g. "Semiconductors", "Government", "VC").
+           - Tags should be English or Traditional Chinese (consistent with existing).
+
+        4. **OUTPUT**:
            - Return JSON.
            - NO email/phone in summary.
         
@@ -130,7 +138,7 @@ export async function enrichSingleContactAction(id) {
             "title": "Corrected Title",
             "company": "Corrected Company",
             "email": "Corrected Email",
-            "phone": "Corrected Phone",
+            "tags": ["Tag1", "Tag2"],
             "aiSummary": "..."
         }`;
 
@@ -148,10 +156,20 @@ export async function enrichSingleContactAction(id) {
         // Apply updates
         let hasChanges = false;
         if (result.name && result.name !== contact.name) { contact.name = result.name; hasChanges = true; }
-        if (result.title && result.title !== contact.title) { contact.title = result.title; hasChanges = true; }
-        if (result.company && result.company !== contact.company) { contact.company = result.company; hasChanges = true; }
         if (result.email && result.email !== contact.email) { contact.email = result.email; hasChanges = true; }
         if (result.phone && result.phone !== contact.phone) { contact.phone = result.phone; hasChanges = true; }
+
+        // Merge AI Tags
+        if (result.tags && Array.isArray(result.tags) && result.tags.length > 0) {
+            const currentTags = new Set(contact.tags || []);
+            result.tags.forEach(t => currentTags.add(t));
+            // Convert back to array
+            const newTags = Array.from(currentTags);
+            if (newTags.length !== (contact.tags || []).length) {
+                contact.tags = newTags;
+                hasChanges = true;
+            }
+        }
 
         // Always update summary
         contact.aiSummary = result.aiSummary;
