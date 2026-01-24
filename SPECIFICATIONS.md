@@ -93,6 +93,6 @@ To satisfy the need for local control and easy indexing (Obsidian/Finder), we wi
 
 ## 6. Questions for User
 - **LLM Provider**: Do you have an OpenAI API key (or similar) ready for us to use for the AI features?
-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
+[API KEY REDACTED]
 
 
