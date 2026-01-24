@@ -297,7 +297,11 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {recentlyAdded.map(contact => (
-                                <div key={contact.id} className="bg-white/5 border border-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/[0.08] transition-all group pointer-events-none">
+                                <div
+                                    key={contact.id}
+                                    onClick={() => toggleSelect(contact.id)}
+                                    className={`bg-white/5 border border-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/[0.08] transition-all group cursor-pointer ${selectedIds.has(contact.id) ? 'ring-2 ring-[#5e52ff] bg-[#5e52ff]/10' : ''}`}
+                                >
                                     <div className="w-10 h-10 rounded-full bg-[#5e52ff] flex items-center justify-center text-white font-bold text-sm">
                                         {contact.name.slice(0, 1)}
                                     </div>
