@@ -111,13 +111,14 @@ export async function enrichSingleContactAction(id) {
            - FIX OCR errors in Name, Title, Company (e.g., "簡瑞齊" -> "簡瑞春").
            - Check Email/Phone: Fix if typo'd. 
            
-        2. **ENRICHMENT (Strictly Factual)**:
-           - **STYLE GUIDE**: NO adjectives. NO marketing fluff (e.g., remove "leading", "excellent", "prestigious", "致力於"). 
-           - **CONTENT**: Focus PURELY on verified Career History (past roles) and Education if found.
-           - If you cannot find specific facts, return an EMPTY summary. Better empty than fake/fluffy.
-           - Format as a compact bullet list if multiple facts exist.
-           - Language: Traditional Chinese.
-        
+        2. **ENRICHMENT (Research Mode)**:
+           - **Identify the Person**: Use your internal knowledge to identify if this is a known figure (e.g. executives, professors, public officials).
+           - **Fact-Based Summary**: Provide a professional background summary. 
+             - If they are a known figure (like TSMC Foundation CEO), describe their known career history and current mandate.
+             - If they are NOT a public figure, describe the **function/mandate of their specific department/company** based on the title.
+           - **Style**: Professional, objective, Traditional Chinese. NO fluff adjectives.
+           - **Format**: Concise paragraph or bullet points.
+
         3. **OUTPUT**:
            - Return JSON.
            - NO email/phone in summary.
@@ -129,7 +130,7 @@ export async function enrichSingleContactAction(id) {
             "company": "Corrected Company",
             "email": "Corrected Email",
             "phone": "Corrected Phone",
-            "aiSummary": "Verified fact 1... Verified fact 2..."
+            "aiSummary": "..."
         }`;
 
         const content = [{ type: "text", text: prompt }];
