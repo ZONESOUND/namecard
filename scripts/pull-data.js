@@ -30,7 +30,9 @@ async function syncDirectory(prefix, localDir) {
 
     let isTruncated = true;
     let continuationToken = undefined;
+    const remoteKeys = new Set(); // Track all remote filenames
 
+    // 1. Download & Overwrite
     while (isTruncated) {
         const command = new ListObjectsV2Command({
             Bucket: BUCKET_NAME,
@@ -49,19 +51,18 @@ async function syncDirectory(prefix, localDir) {
                     // Skip folders
                     if (!fileName) continue;
 
+                    remoteKeys.add(fileName); // Record as existing
+
                     const localPath = path.join(localDir, fileName);
 
-                    // Simple check: if file exists and size matches, skip (naive sync)
-                    // For better sync, we check LastModified, but here we just overwrite to be safe
-                    // or for "pull", we usually want cloud truth.
-
-                    console.log(`  Downloading: ${fileName}`);
+                    // console.log(`  Downloading: ${fileName}`); // Reduce noise
 
                     const getCmd = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
                     const getRes = await R2.send(getCmd);
 
                     // Stream to file
                     await pipeline(getRes.Body, createWriteStream(localPath));
+                    process.stdout.write('.'); // Progress indicator
                 }
             }
 
@@ -72,6 +73,23 @@ async function syncDirectory(prefix, localDir) {
             console.error(`Error listing/downloading ${prefix}:`, e);
             break;
         }
+    }
+    console.log(" Done.");
+
+    // 2. Delete Stale Local Files
+    try {
+        const localFiles = await fs.readdir(localDir);
+        let deletedCount = 0;
+        for (const file of localFiles) {
+            if (!remoteKeys.has(file) && file !== '.DS_Store') {
+                await fs.unlink(path.join(localDir, file));
+                console.log(`  🗑️  Deleted stale file: ${file}`);
+                deletedCount++;
+            }
+        }
+        if (deletedCount > 0) console.log(`  (Cleaned up ${deletedCount} local files)`);
+    } catch (e) {
+        console.error("Error cleaning up local files:", e);
     }
 }
 

@@ -61,7 +61,7 @@
     "history": []
   },
   {
-    "name": "簡瑞齊",
+    "name": "簡瑞春 Richard Chien",
     "title": "AVP, Sales, TW VR SMO (副總經理)",
     "company": "HTC",
     "email": "richard_chien@htc.com",
@@ -78,10 +78,10 @@
     ],
     "id": "f1dde6e0-1fd4-4646-bcbb-95f174c91934",
     "addedAt": "2026-01-22T00:33:21.586Z",
-    "updatedAt": "2026-01-22T08:21:09.179Z",
+    "updatedAt": "2026-01-24T04:03:06.773Z",
     "metAt": "2026 HTC新店總部",
     "notes": "工研院安排參訪",
-    "aiSummary": "簡瑞齊先生目前擔任宏達國際電子股份有限公司（HTC）的副總經理，負責台灣的虛擬實境銷售管理。HTC 成立於 1997 年，是全球領先的科技公司，專注於虛擬實境、行動裝置及智慧科技的創新與發展。公司致力於提供卓越的科技產品及使用者體驗，引領行業創新趨勢。簡瑞齊先生在HTC的角色包括推動市場擴張及增強業務發展，對公司在科技產業的領導地位有重要貢獻。",
+    "aiSummary": "簡瑞春先生現任宏達國際電子股份有限公司（HTC）副總經理，負責台灣區虛擬實境技術的銷售部門。作為資深管理人員，他在銷售策略制定與執行方面具備豐富經驗，專注於推動公司在虛擬實境市場的發展。電子郵件聯絡方式為richard_chien@htc.com。",
     "history": []
   },
   {
@@ -591,7 +591,28 @@
     "id": "3c8b5d22-bbd8-4547-a6f5-012f9a32cc85",
     "history": [],
     "addedAt": "2026-01-22T07:46:40.065Z",
-    "updatedAt": "2026-01-22T08:22:33.424Z",
-    "aiSummary": "洪宜玲女士擔任新富町文化市場的總監，她在推動文化市場的發展方面發揮了重要的領導作用。新富町文化市場致力於保存和推廣台灣的傳統文化和歷史，透過各式展覽、活動以及藝術創作，吸引公眾參與及欣賞。洪宜玲總監以其豐富的管理經驗和對文化的熱忱，成功將該市場打造成為一個促進文化交流與創新的平台。如需聯絡，她的電子信箱為yilinghung@jutfoundation.org.tw。"
+    "updatedAt": "2026-01-24T04:06:22.080Z",
+    "aiSummary": "洪宜玲女士現任新富町文化市場總監，專注於文化市場的管理和發展。其職責包括規劃與推動各類文化活動，以促進社區文化交流與發展。若有進一步查詢，請透過電子郵件聯絡：yilinghung@jutfoundation.org.tw。"
+  },
+  {
+    "name": "陳映霖 (Jessica Ying-Lin Chen)",
+    "title": "Marketing Planning Dept. Manager (行銷企劃組 經理/組長)",
+    "company": "松山文創園區 (SCCP, Taipei Culture Foundation)",
+    "email": "yinglin@taipeiculture.org",
+    "phone": "+886 920 426 783",
+    "metAt": "",
+    "notes": "",
+    "tags": [
+      "Taiwan",
+      "Marketing",
+      "文化基金會",
+      "管理"
+    ],
+    "jobStatus": null,
+    "id": "ca4b7169-bc51-4292-a22a-01e846f9d1f6",
+    "history": [],
+    "addedAt": "2026-01-24T03:40:10.339Z",
+    "updatedAt": "2026-01-24T03:53:47.880Z",
+    "aiSummary": "陳映霖女士目前擔任松山文創園區行銷企劃組的經理/組長，負責行銷策略的規劃與執行。松山文創園區由台北文化基金會管理，旨在推動文化創意產業的發展。陳映霖透過有效的行銷策略，促進園區的知名度與活動參與度。她的專業涵蓋行銷計畫的制訂與實施。聯絡方式為 yinglin@taipeiculture.org。"
   }
 ]
