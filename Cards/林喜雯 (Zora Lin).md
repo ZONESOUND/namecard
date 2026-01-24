@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+林喜雯目前擔任文化內容策進院之策略研究處副處長，負責戰略及研究相關事務。文化內容策進院專注於推動台灣文化創意內容的發展與國際化。林喜雯與大學圖書館學者郭文華（whkuo@nycu.edu.tw）有合作關係，專注於科學技術與社會研究。聯絡林喜雯可通過電子郵件：azahsi@taicca.tw。
 
 ## Notes
 

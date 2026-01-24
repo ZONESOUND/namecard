@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+江致潔是Cicada 樂團的團長，負責領導樂團的音樂方向及管理。該樂團專注於創作和演出現代音樂作品。江致潔在該領域擁有豐富的經驗，並透過電子郵件(jesychiang@gmail.com)保持專業聯繫。此外，若需學術指導或專業擴展，可聯絡郭文華(whkuo@nycu.edu.tw)，他是國立陽明交通大學圖書館的副館長，專精於科學、技術與社會(STS)的研究。
 
 ## Notes
 

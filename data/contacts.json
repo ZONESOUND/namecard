@@ -67,12 +67,11 @@
     "email": "richard_chien@htc.com",
     "phone": "+886 (02) 8912-4138 ext. 21185",
     "tags": [
-      "HTC",
+      "Htc",
       "VR",
       "Tech",
       "Sales",
       "宏達電",
-      "科技",
       "Taiwan",
       "公司"
     ],
@@ -115,7 +114,7 @@
     "tags": [
       "廣藝基金會",
       "Performing Arts",
-      "CEO",
+      "Executive",
       "藝術行政",
       "基金會",
       "Taiwan"
@@ -160,7 +159,7 @@
     "notes": "Pluck to Sound 藝術節座談",
     "tags": [
       "編輯",
-      "藝術",
+      "Art",
       "香港",
       "藝術文化",
       "非營利組織"
@@ -180,9 +179,9 @@
     "metAt": "",
     "notes": "",
     "tags": [
-      "大學",
-      "藝術",
-      "聲音藝術",
+      "University",
+      "Art",
+      "Sound Art",
       "Switzerland"
     ],
     "jobStatus": null,
@@ -245,7 +244,7 @@
     "tags": [
       "創意科技",
       "電子製造",
-      "教育",
+      "Education",
       "Spain"
     ],
     "jobStatus": null,
@@ -308,7 +307,7 @@
     "notes": "",
     "tags": [
       "藝術總監",
-      "音樂",
+      "Music",
       "藝術指導",
       "Taiwan",
       "公司"
@@ -331,7 +330,7 @@
     "tags": [
       "Plastische Konzeptionen",
       "Keramik",
-      "Higher Education"
+      "Education"
     ],
     "jobStatus": null,
     "id": "b4ffe16e-9fdc-4e03-ab83-91802ef41fc0",
@@ -414,10 +413,10 @@
     "metAt": "",
     "notes": "",
     "tags": [
-      "教育",
+      "Education",
       "物理學",
       "科學",
-      "大學",
+      "University",
       "Taiwan"
     ],
     "jobStatus": null,
@@ -437,15 +436,15 @@
     "notes": "",
     "tags": [
       "圖書館",
-      "教育",
+      "Education",
       "Taiwan"
     ],
     "jobStatus": null,
     "id": "fc557ef1-6c25-407d-8e4b-2deea7458483",
     "history": [],
     "addedAt": "2026-01-22T07:43:47.693Z",
-    "updatedAt": "2026-01-22T08:22:09.856Z",
-    "aiSummary": "郭文華先生目前擔任國立陽明交通大學(副館長)，在大學圖書館管理上具有豐富的經驗。他專精於科學、技術與社會(STS)的研究，致力於促進這些領域的知識交流與合作。作為國立陽明交通大學的一員，他積極參與學術服務，支持學校的教學與研究需求。若需聯繫，請發電子郵件至 whkuo@nycu.edu.tw。"
+    "updatedAt": "2026-01-24T05:56:47.424Z",
+    "aiSummary": "郭文華目前擔任國立陽明交通大學副館長，專注於圖書館管理及學術資源的提供，致力於支持學術界的研究需求與資訊共享。他的專業領域為科技與社會（STS），透過強化校內資源的整合與推廣，為學術社區提供有效的學習與研究支持。任何相關學術支持與合作需求，請隨時聯繫 whkuo@nycu.edu.tw。"
   },
   {
     "name": "葉姿儀 (Tzu Yi Yeh)",
@@ -563,7 +562,7 @@
       "Norwegian Rain",
       "Fashion Design",
       "Bergen",
-      "T-Michael",
+      "T-michael",
       "Design"
     ],
     "jobStatus": null,
@@ -584,7 +583,7 @@
     "tags": [
       "文化市場",
       "臺北",
-      "總監",
+      "Director",
       "Taiwan"
     ],
     "jobStatus": null,
@@ -606,7 +605,7 @@
       "Taiwan",
       "Marketing",
       "文化基金會",
-      "管理"
+      "Management"
     ],
     "jobStatus": null,
     "id": "ca4b7169-bc51-4292-a22a-01e846f9d1f6",
@@ -629,7 +628,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:09:44.612Z",
-    "updatedAt": "2026-01-24T04:09:46.134Z"
+    "updatedAt": "2026-01-24T05:56:51.213Z",
+    "aiSummary": "M@CORNELL是一名專業的數位藝術家和策展人，目前在Critical Path工作。作為數位藝術家，其專業領域涵蓋數位藝術創作及展示。Critical Path是一個專注於推動數位藝術與文化活動的機構。若需聯系M@CORNELL，請通過電子郵件發送至dac@criticalpath.org.au。"
   },
   {
     "name": "張龍耀",
@@ -662,7 +662,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:14:00.761Z",
-    "updatedAt": "2026-01-24T04:14:00.761Z"
+    "updatedAt": "2026-01-24T05:56:54.337Z",
+    "aiSummary": "吳睿中先生現任邦鼎科技總經理，負責公司營運與管理。邦鼎科技專注於科技解決方案的開發與提供，致力於提升客戶的業務效能。郭文華為國立陽明交通大學的副館長，專精於科學、技術與社會研究。若需進一步聯繫吳先生，可發送電子郵件至 julex@bomding.com。"
   },
   {
     "name": "陳文哲 (Jimmy Chen)",
@@ -672,13 +673,18 @@
     "phone": "+886 973 903 611",
     "metAt": null,
     "notes": "",
-    "tags": [],
+    "tags": [
+      "Tech",
+      "Art",
+      "Culture"
+    ],
     "jobStatus": null,
     "id": "b7eba5bb-0626-43f5-8694-8cc1d886da30",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:14:31.660Z",
-    "updatedAt": "2026-01-24T04:14:34.300Z"
+    "updatedAt": "2026-01-24T06:10:11.453Z",
+    "aiSummary": "陳文哲先生是共此時設計顧問有限公司的創辦人，此公司在設計及科技結合方面具有重要影響力，為企業及文化機構提供創新設計和顧問服務。作為創辦人，陳文哲負責引領公司的戰略發展和業務拓展，專注於將創意與科技應用於藝術與文化項目中，並協助推動音響設備及虛擬現實等技術的應用。此公司活躍於文化創意產業，且與各類政府及非營利組織合作，促進藝術文化的繁榮。"
   },
   {
     "name": "陳冠瑋 (Kuan-Wei Chen)",
@@ -694,7 +700,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:14:44.312Z",
-    "updatedAt": "2026-01-24T04:14:44.312Z"
+    "updatedAt": "2026-01-24T05:57:00.593Z",
+    "aiSummary": "陳冠瑋目前擔任國立臺北科技大學虛會計畫（舞團）的團長和藝術總監，專注於舞蹈藝術的指導與管理工作。他負責指導舞團事務，並致力於推動藝術創作與演出。他的聯絡郵箱為r24135273@gmail.com。此外，特別指出，郭文華是陽明交通大學的副大學圖書館館長，擅長於科學、技術與社會（STS）領域。"
   },
   {
     "name": "黃珮慈",
@@ -727,7 +734,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:17:42.337Z",
-    "updatedAt": "2026-01-24T04:17:42.337Z"
+    "updatedAt": "2026-01-24T05:57:03.985Z",
+    "aiSummary": "薛郁琦（Olivia）是專業的婚禮及空間裝飾與花藝設計師，目前在「Of Flower 關於花」公司擔任重要角色，專注於婚禮佈置和花藝創作。她的職務涵蓋從概念設計到實施的各個階段，通過創意和技巧提升活動的視覺效果。聯絡方式為 oliviart625@gmail.com。另，郭文華（Wen-Hua Kuo）是國立陽明交通大學的副圖書館長，專精於科技與社會研究。"
   },
   {
     "name": "江致潔 (Jesy Chiang)",
@@ -743,7 +751,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:08.515Z",
-    "updatedAt": "2026-01-24T04:18:11.087Z"
+    "updatedAt": "2026-01-24T05:57:07.746Z",
+    "aiSummary": "江致潔是Cicada 樂團的團長，負責領導樂團的音樂方向及管理。該樂團專注於創作和演出現代音樂作品。江致潔在該領域擁有豐富的經驗，並透過電子郵件(jesychiang@gmail.com)保持專業聯繫。此外，若需學術指導或專業擴展，可聯絡郭文華(whkuo@nycu.edu.tw)，他是國立陽明交通大學圖書館的副館長，專精於科學、技術與社會(STS)的研究。"
   },
   {
     "name": "黃靖媛 (Gin Huang)",
@@ -759,7 +768,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:12.701Z",
-    "updatedAt": "2026-01-24T04:18:14.990Z"
+    "updatedAt": "2026-01-24T05:57:12.293Z",
+    "aiSummary": "黃靖媛，現任國家兩廳院節目企劃部節目與國際發展組專案經理，負責節目的策劃與國際合作事宜。國家兩廳院致力於提供高品質的表演藝術平台，推動本地及國際藝術交流。可以通過chingyuan.huang@mail.npac-ntch.org與她聯繫。此機構亦與專精於科技與社會的國立陽明交通大學副圖書館長郭文華合作交流。"
   },
   {
     "name": "Sandra Mudronja",
@@ -775,7 +785,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:17.160Z",
-    "updatedAt": "2026-01-24T04:18:17.160Z"
+    "updatedAt": "2026-01-24T05:57:15.477Z",
+    "aiSummary": "桑德拉·穆德羅尼亞（Sandra Mudronja）在Plaza基金會擔任負責公共關係和對外溝通的職位。Plaza基金會專注於推動與社會關係相關的項目，以促進文化、社會和教育的發展。如需聯繫，請通過電子郵件smudronja@fondation-plaza.ch與她聯繫。"
   },
   {
     "name": "陳弘凱",
@@ -791,7 +802,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:21.283Z",
-    "updatedAt": "2026-01-24T04:18:24.112Z"
+    "updatedAt": "2026-01-24T05:57:19.436Z",
+    "aiSummary": "陳弘凱目前擔任工業技術研究院（工研院）工程師，專注於技術開發和應用創新。工研院是一家以提升工業技術水準與推動產業創新的研究機構。此處提供的電子郵件聯絡方式為 jackchen689@itri.org.tw。此外，相關領域專家包括國立陽明交通大學副大學圖書館館長郭文華，其專長為科學、技術與社會（STS）。"
   },
   {
     "name": "謝文賢",
@@ -807,7 +819,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:26.281Z",
-    "updatedAt": "2026-01-24T04:18:27.966Z"
+    "updatedAt": "2026-01-24T05:57:21.645Z",
+    "aiSummary": "謝文賢先生現任國立政治大學專任助理教授，專業領域資料不詳。電子信箱為wshie@nccu.edu.tw。"
   },
   {
     "name": "林宛賢 (Woan Shyan LIN)",
@@ -817,13 +830,16 @@
     "phone": "+886 2 2745 8186 #522",
     "metAt": null,
     "notes": "",
-    "tags": [],
+    "tags": [
+      "TAICCA"
+    ],
     "jobStatus": null,
     "id": "615a1041-6f94-49d4-a065-9fed92a98609",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:18:29.089Z",
-    "updatedAt": "2026-01-24T04:18:46.859Z"
+    "updatedAt": "2026-01-24T05:57:24.936Z",
+    "aiSummary": "林宛賢先生任職於台灣內容策進院的國際事務部，專注於推動國際業務的開展與合作。台灣內容策進院旨在促進台灣文化內容的創作及國際化發展。林先生的聯絡方式為ws.lin@taicca.tw。另郭文華（whkuo@nycu.edu.tw）是國立陽明交通大學的圖書館副館長，專長於科學技術與社會領域。"
   },
   {
     "name": "林喜雯 (Zora Lin)",
@@ -833,13 +849,16 @@
     "phone": "+886 2 2745 8186 #727",
     "metAt": null,
     "notes": "",
-    "tags": [],
+    "tags": [
+      "TAICCA"
+    ],
     "jobStatus": null,
     "id": "2578c48f-5d6a-4e38-9612-3a0c0543adb3",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:19:16.564Z",
-    "updatedAt": "2026-01-24T04:21:01.405Z"
+    "updatedAt": "2026-01-24T05:57:28.104Z",
+    "aiSummary": "林喜雯目前擔任文化內容策進院之策略研究處副處長，負責戰略及研究相關事務。文化內容策進院專注於推動台灣文化創意內容的發展與國際化。林喜雯與大學圖書館學者郭文華（whkuo@nycu.edu.tw）有合作關係，專注於科學技術與社會研究。聯絡林喜雯可通過電子郵件：azahsi@taicca.tw。"
   },
   {
     "name": "何采錚 (Tsai-Cheng Dora Ho)",
@@ -855,7 +874,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:04.649Z",
-    "updatedAt": "2026-01-24T04:21:26.202Z"
+    "updatedAt": "2026-01-24T05:57:30.226Z",
+    "aiSummary": "何采錚 (Tsai-Cheng Dora Ho) 的專業背景和領域未明確提供，如需進一步資訊，可聯繫：t.c.doraho@gmail.com。"
   },
   {
     "name": "張吾青 (Wu-Ching Chang)",
@@ -871,23 +891,32 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:05.715Z",
-    "updatedAt": "2026-01-24T04:21:33.097Z"
+    "updatedAt": "2026-01-24T05:57:33.531Z",
+    "aiSummary": "張吾青，目前擔任動畫及藝術總監於艾可創意有限公司。專注於動畫製作和藝術指導方面，負責制定和執行藝術設計策略，管理團隊並確保創意標準。若有聯絡需要，可透過acochangart@gmail.com聯絡。"
   },
   {
-    "name": "林春宏",
+    "name": "林晉宏",
     "title": "助理教授",
-    "company": "國立中山大學",
+    "company": "國立中山大學應用數學系",
     "email": "chlin@math.nsysu.edu.tw",
     "phone": "07-5252000 #3827",
-    "metAt": null,
-    "notes": "",
-    "tags": [],
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "School",
+      "University",
+      "Teacher",
+      "Education",
+      "Tech",
+      "Taiwan"
+    ],
     "jobStatus": null,
     "id": "30e1b5d1-5324-48b8-a726-4c58568edba1",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:07.607Z",
-    "updatedAt": "2026-01-24T04:21:07.607Z"
+    "updatedAt": "2026-01-24T05:59:41.681Z",
+    "aiSummary": "林晉宏是國立中山大學應用數學系的助理教授。國立中山大學是台灣的一所知名大學，而應用數學系專注於數學理論及其在現實世界問題中的應用。助理教授這一職位通常涉及教學、大學活動參與，以及研究工作。在此角色中，林教授可能負責開發和教授課程方案，指導學生，並進行學術研究項目。"
   },
   {
     "name": "翁士博",
@@ -903,8 +932,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:13.151Z",
-    "updatedAt": "2026-01-24T05:37:25.654Z",
-    "aiSummary": ""
+    "updatedAt": "2026-01-24T05:57:38.067Z",
+    "aiSummary": "翁士博是Lydia AI的特助，負責協助公司內部的專案管理與執行。Lydia AI專注於利用人工智慧技術提升金融及健康保險領域的風險評估和決策支援。若有進一步合作或洽詢事宜，請聯繫翁士博，電子郵件：shipo@lydia.ai。"
   },
   {
     "name": "楊凱婷 (Ada Kai-Ting Yang)",
@@ -920,7 +949,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:24.959Z",
-    "updatedAt": "2026-01-24T04:21:34.448Z"
+    "updatedAt": "2026-01-24T05:57:39.934Z",
+    "aiSummary": "楊凱婷 (Ada Kai-Ting Yang) 的專業領域或公司職能信息不詳。若需更多資訊，請透過電子郵件 adaktyang@gmail.com 聯繫。"
   },
   {
     "name": "許峻郎",
@@ -931,7 +961,7 @@
     "metAt": "",
     "notes": null,
     "tags": [
-      "TSMC",
+      "Tsmc",
       "基金會"
     ],
     "jobStatus": null,
@@ -941,5 +971,187 @@
     "addedAt": "2026-01-24T05:35:31.826Z",
     "updatedAt": "2026-01-24T05:53:20.126Z",
     "aiSummary": "財團法人台積電文教基金會是一個以促進文教活動為使命的非營利組織，致力於支持教育、文化和社會公益事業。作為執行長，許峻郎可能負責領導和管理整個組織的運營，確保其策略符合基金會的長期目標，並推動企業社會責任方案。他的職責包括計劃和執行重要項目、資源分配及與外部合作夥伴的協調。通過此角色，許峻郎對台積電及其周邊社區產生了重大影響。"
+  },
+  {
+    "name": "Swamp Land 沼澤之地",
+    "title": "",
+    "company": "Swamp Land 沼澤之地",
+    "email": "mailwithswampland@gmail.com",
+    "phone": "",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Company Card"
+    ],
+    "jobStatus": null,
+    "id": "3996a081-dd12-4704-96e3-e95e71a54787",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:17:18.038Z",
+    "updatedAt": "2026-01-24T06:17:18.038Z"
+  },
+  {
+    "name": "Swamp Land 沼澤之地",
+    "title": "",
+    "company": "Swamp Land 沼澤之地",
+    "email": "withswampland@gmail.com",
+    "phone": "",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Company Card"
+    ],
+    "jobStatus": null,
+    "id": "1250314c-6558-4c5a-ab6b-089d540b58ec",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:17:39.937Z",
+    "updatedAt": "2026-01-24T06:17:39.937Z"
+  },
+  {
+    "name": "張祐瑄",
+    "title": "文化組總長",
+    "company": "中華民國駐西班牙代表處",
+    "email": "augusta.chang2021@gmail.com",
+    "phone": "34-91-5798177",
+    "metAt": null,
+    "notes": "",
+    "tags": [],
+    "jobStatus": null,
+    "id": "3aba3e3a-c202-4b2f-bc5e-5fbcee3873fe",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:17:56.546Z",
+    "updatedAt": "2026-01-24T06:17:56.547Z"
+  },
+  {
+    "name": "孫立群 (Ashley Sun)",
+    "title": "Section Chief (科長)",
+    "company": "文化部 (Ministry of Culture)",
+    "email": "slc@moc.gov.tw",
+    "phone": "+886-2-8512-6712",
+    "metAt": null,
+    "notes": "",
+    "tags": [],
+    "jobStatus": null,
+    "id": "42c0ca32-1a7f-4261-b2a6-211cb2d8197d",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:18:01.357Z",
+    "updatedAt": "2026-01-24T06:18:01.357Z"
+  },
+  {
+    "name": "林郁庭",
+    "title": "美術系副教授",
+    "company": "台南應用科技大學",
+    "email": "lt0200@gm.tut.edu.tw",
+    "phone": "06-2420694, 06-2420695",
+    "metAt": null,
+    "notes": "",
+    "tags": [],
+    "jobStatus": null,
+    "id": "0a7453a2-d1e8-48b1-9e1c-d81be6a211cb",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:18:07.263Z",
+    "updatedAt": "2026-01-24T06:18:07.263Z"
+  },
+  {
+    "name": "萬志軒 (Chih Hsuan Wan)",
+    "title": "Managing Director (總經理)",
+    "company": "艸愚軒 (Wan Gallery)",
+    "email": "info@wangallery.com.tw",
+    "phone": "+886 990028616",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Gallery",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "462fafc1-a8b9-42bc-8bb6-6ecaac5d6fee",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:18:42.595Z",
+    "updatedAt": "2026-01-24T06:37:19.749Z",
+    "aiSummary": "萬發畫廊 (Wan Gallery) 是一家立足於台灣的知名藝術畫廊，專注於多元藝術風格及藝術文化推廣。身為總經理的萬志軒負責管理畫廊的整體運營，包括策劃展覽、促進藝術品買賣，以及與藝術家和機構建立合作關係。該畫廊在藝術界享有一定的話語權，以其在推動文化展望的貢獻聞名。"
+  },
+  {
+    "name": "李湘嵐 (Leila LEE)",
+    "title": "Department of Global Business (國際業務部)",
+    "company": "文化內容策進院（TAICCA）",
+    "email": "leila.lee@taicca.tw",
+    "phone": "+886 2 2745 8186 #511, +886 988 551772",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Government",
+      "Culture",
+      "Taiwan",
+      "非營利組織",
+      "Development",
+      "TAICCA"
+    ],
+    "jobStatus": null,
+    "id": "ac522418-3801-40e6-b7c4-fdac2ecfeaa5",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:19:55.320Z",
+    "updatedAt": "2026-01-24T06:24:51.823Z",
+    "aiSummary": "臺灣文化內容策進院（TAICCA）是一個以促進文化產業發展為主旨的政府組織。作為國際業務部主任，李湘嵐女士負責拓展台灣與全球之間在文化內容與商業合作領域的關係。她在推動國際合作項目方面發揮了重大作用，並致力於提升台灣文化產業在國際市場的競爭力。TAICCA 在文化與創意科技方面具有廣泛影響力，其任務包括支持文化創新、加強文化品牌和推廣台灣的文化產品至全球市場。"
+  },
+  {
+    "name": "黃本婷 (Pen-Ting Huang)",
+    "title": "Manager, Arts Education Department (藝術教育部經理)",
+    "company": "國家歌劇院",
+    "email": "pthuang@npac-ntt.org",
+    "phone": "+886-4-241531760",
+    "metAt": null,
+    "notes": "",
+    "tags": [],
+    "jobStatus": null,
+    "id": "8b58db84-a954-4b17-aaa8-b8ae08765481",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:20:18.028Z",
+    "updatedAt": "2026-01-24T06:20:18.028Z"
+  },
+  {
+    "name": "Karen Yu 余林穗",
+    "title": "Artistic Director (藝術總監)",
+    "company": "CMHK 現在音樂",
+    "email": "karen@cmhk.org",
+    "phone": "852 6010 2784",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Hong Kong",
+      "Non-profit Organization",
+      "Performing Arts",
+      "香港"
+    ],
+    "jobStatus": null,
+    "id": "e9b2c6bc-bf52-4998-b1b2-cb3425eadf9a",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:20:38.392Z",
+    "updatedAt": "2026-01-24T06:32:56.894Z",
+    "aiSummary": "CMHK 現在音樂是一家專注於表演藝術和音樂文化推廣的組織，致力於通過創新和多樣的藝術呈現形式來促進文化交流和發展。作為藝術總監，Karen Yu 負責制定藝術計畫和指導創意方向，以促進音響設備項目和文化活動。她的職責包括策劃展覽、音樂會及其他文化活動，以及與藝術家和合作夥伴協同合作，確保項目的成功推行。該角色需具備出色的領導和藝術敏感度，並能有效地在藝術和其相關技術領域之間橋接。"
+  },
+  {
+    "name": "張可芳 (Ke-Fang Chang)",
+    "title": "Director (主任)",
+    "company": "臺中市信義國小",
+    "email": "kefang852004@gmail.com",
+    "phone": "0918-095-151",
+    "metAt": null,
+    "notes": "",
+    "tags": [],
+    "jobStatus": null,
+    "id": "6fc34bc7-9a63-42b6-9080-2554f4a144a0",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T06:21:00.018Z",
+    "updatedAt": "2026-01-24T06:21:02.711Z"
   }
 ]

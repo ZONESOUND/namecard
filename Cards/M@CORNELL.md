@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+M@CORNELL是一名專業的數位藝術家和策展人，目前在Critical Path工作。作為數位藝術家，其專業領域涵蓋數位藝術創作及展示。Critical Path是一個專注於推動數位藝術與文化活動的機構。若需聯系M@CORNELL，請通過電子郵件發送至dac@criticalpath.org.au。
 
 ## Notes
 

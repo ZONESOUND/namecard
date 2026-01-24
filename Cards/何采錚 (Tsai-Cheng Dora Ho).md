@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+何采錚 (Tsai-Cheng Dora Ho) 的專業背景和領域未明確提供，如需進一步資訊，可聯繫：t.c.doraho@gmail.com。
 
 ## Notes
 

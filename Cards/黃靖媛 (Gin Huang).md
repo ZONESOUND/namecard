@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+黃靖媛，現任國家兩廳院節目企劃部節目與國際發展組專案經理，負責節目的策劃與國際合作事宜。國家兩廳院致力於提供高品質的表演藝術平台，推動本地及國際藝術交流。可以通過chingyuan.huang@mail.npac-ntch.org與她聯繫。此機構亦與專精於科技與社會的國立陽明交通大學副圖書館長郭文華合作交流。
 
 ## Notes
 

@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+林宛賢先生任職於台灣內容策進院的國際事務部，專注於推動國際業務的開展與合作。台灣內容策進院旨在促進台灣文化內容的創作及國際化發展。林先生的聯絡方式為ws.lin@taicca.tw。另郭文華（whkuo@nycu.edu.tw）是國立陽明交通大學的圖書館副館長，專長於科學技術與社會領域。
 
 ## Notes
 

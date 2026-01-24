@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+陳冠瑋目前擔任國立臺北科技大學虛會計畫（舞團）的團長和藝術總監，專注於舞蹈藝術的指導與管理工作。他負責指導舞團事務，並致力於推動藝術創作與演出。他的聯絡郵箱為r24135273@gmail.com。此外，特別指出，郭文華是陽明交通大學的副大學圖書館館長，擅長於科學、技術與社會（STS）領域。
 
 ## Notes
 

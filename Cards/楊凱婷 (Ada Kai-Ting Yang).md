@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+楊凱婷 (Ada Kai-Ting Yang) 的專業領域或公司職能信息不詳。若需更多資訊，請透過電子郵件 adaktyang@gmail.com 聯繫。
 
 ## Notes
 

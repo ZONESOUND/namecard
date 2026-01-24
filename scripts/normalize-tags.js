@@ -46,6 +46,8 @@ const TAG_MAPPING = {
     "NTCH": "NTCH",
     "衛武營": "Weiwuying",
     "歌劇院": "NTT",
+    "CMHK": "Contemporary Musiking Hong Kong",
+    "現在音樂": "Contemporary Musiking Hong Kong",
 
     // --- ROLES ---
     "Curator": "Curator",

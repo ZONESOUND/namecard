@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+桑德拉·穆德羅尼亞（Sandra Mudronja）在Plaza基金會擔任負責公共關係和對外溝通的職位。Plaza基金會專注於推動與社會關係相關的項目，以促進文化、社會和教育的發展。如需聯繫，請通過電子郵件smudronja@fondation-plaza.ch與她聯繫。
 
 ## Notes
 

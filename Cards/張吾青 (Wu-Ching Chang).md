@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+張吾青，目前擔任動畫及藝術總監於艾可創意有限公司。專注於動畫製作和藝術指導方面，負責制定和執行藝術設計策略，管理團隊並確保創意標準。若有聯絡需要，可透過acochangart@gmail.com聯絡。
 
 ## Notes
 

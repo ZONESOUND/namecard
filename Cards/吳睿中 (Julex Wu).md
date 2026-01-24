@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+吳睿中先生現任邦鼎科技總經理，負責公司營運與管理。邦鼎科技專注於科技解決方案的開發與提供，致力於提升客戶的業務效能。郭文華為國立陽明交通大學的副館長，專精於科學、技術與社會研究。若需進一步聯繫吳先生，可發送電子郵件至 julex@bomding.com。
 
 ## Notes
 
