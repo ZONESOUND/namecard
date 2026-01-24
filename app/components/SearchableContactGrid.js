@@ -1,4 +1,11 @@
+'use client';
+
+import { useState, useMemo } from 'react';
 import EditContactModal from './EditContactModal';
+import ContactCard from './ContactCard';
+import { Search, Users, Zap, X, LayoutGrid, List, Filter, TrendingUp, Clock, Tag as TagIcon, ChevronRight, MapPin, Sparkles, Loader2, CheckSquare, Square, Download, Copy as CopyIcon, Mail as MailIcon } from 'lucide-react';
+import { batchEnrichAction } from '../actions';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchableContactGrid({ contacts, availableTags = [] }) {
     const [searchTerm, setSearchTerm] = useState('');
