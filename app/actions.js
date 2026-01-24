@@ -111,13 +111,14 @@ export async function enrichSingleContactAction(id) {
            - FIX OCR errors in Name, Title, Company (e.g., "簡瑞齊" -> "簡瑞春").
            - Check Email/Phone: Fix if typo'd. 
            
-        2. **ENRICHMENT (Research Mode)**:
-           - **Identify the Person**: Use your internal knowledge to identify if this is a known figure (e.g. executives, professors, public officials).
-           - **Fact-Based Summary**: Provide a professional background summary. 
-             - If they are a known figure (like TSMC Foundation CEO), describe their known career history and current mandate.
-             - If they are NOT a public figure, describe the **function/mandate of their specific department/company** based on the title.
-           - **Style**: Professional, objective, Traditional Chinese. NO fluff adjectives.
-           - **Format**: Concise paragraph or bullet points.
+        2. **ENRICHMENT (Mandatory)**:
+           - **Identify the Person**: Check your internal knowledge for this person.
+           - **Fallback Strategy (CRITICAL)**: If you do NOT know the person, you **MUST** describe the **Organization's significance** and the **Role's responsibilities** instead. 
+             - Example: "As CEO of TSMC Foundation, this role likely leads major corporate social responsibility initiatives..."
+             - DO NOT return an empty summary. 
+             - DO NOT say "I don't know this person."
+           - **Style**: Professional, objective, Traditional Chinese.
+           - **Format**: Concise paragraph.
 
         3. **OUTPUT**:
            - Return JSON.
