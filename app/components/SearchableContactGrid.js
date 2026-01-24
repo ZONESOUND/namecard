@@ -156,7 +156,7 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
                             <MapPin size={12} className="text-gray-600" />
                         </div>
                         <div className="flex flex-wrap gap-2 px-2">
-                            {['Taiwan', 'Japan', 'USA', 'Germany', 'UK', 'Korea', 'France', 'Singapore', 'China']
+                            {['Taiwan', 'Japan', 'USA', 'Germany', 'UK', 'Korea', 'France', 'Singapore', 'China', 'Switzerland', 'Hong Kong', 'Australia', 'Canada', 'Netherlands', 'Italy', 'Macau', 'Malaysia', 'Vietnam']
                                 .filter(country => tagCounts[country])
                                 .map(country => {
                                     const isSelected = selectedTag === country;
@@ -184,7 +184,7 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
                         </div>
                         <div className="flex flex-wrap gap-x-3 gap-y-2 px-2 max-h-[300px] overflow-y-auto scrollbar-hide">
                             {sortedTags
-                                .filter(([tag]) => !['Taiwan', 'Japan', 'USA', 'Germany', 'UK', 'Korea', 'France', 'Singapore', 'China'].includes(tag))
+                                .filter(([tag]) => !['Taiwan', 'Japan', 'USA', 'Germany', 'UK', 'Korea', 'France', 'Singapore', 'China', 'Switzerland', 'Hong Kong', 'Australia', 'Canada', 'Netherlands', 'Italy', 'Macau', 'Malaysia', 'Vietnam'].includes(tag))
                                 .map(([tag, count]) => {
                                     const isSelected = selectedTag === tag;
                                     const bucket = count >= 5 ? 'text-sm font-bold opacity-100' : count >= 3 ? 'text-xs font-semibold opacity-90' : 'text-[11px] opacity-70';

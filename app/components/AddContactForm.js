@@ -418,33 +418,132 @@ export default function AddContactForm({ availableTags = [] }) {
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Professional Identity</label>
                                                         <input
-                                                            key={activeId}
                                                             name="name"
-                                                            defaultValue={displayData.name}
-                                                            onChange={(e) => {
-                                                                const newName = e.target.value;
-                                                                setQueue(prev => prev.map(item =>
-                                                                    item.id === activeId ? { ...item, data: { ...item.data, name: newName } } : item
-                                                                ));
-                                                            }}
+                                                            value={displayData.name || ''}
+                                                            onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, name: e.target.value } })}
                                                             className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                             placeholder="Full Name"
                                                         />
                                                         <div className="grid grid-cols-2 gap-4">
-                                                            <input key={activeId} name="title" defaultValue={displayData.title} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Title" />
-                                                            <input key={activeId} name="company" defaultValue={displayData.company} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Company" />
+                                                            <input
+                                                                name="title"
+                                                                value={displayData.title || ''}
+                                                                onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, title: e.target.value } })}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                placeholder="Title"
+                                                            />
+                                                            <input
+                                                                name="company"
+                                                                value={displayData.company || ''}
+                                                                onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, company: e.target.value } })}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                placeholder="Company"
+                                                            />
                                                         </div>
                                                     </div>
 
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Relationship Context</label>
-                                                        <textarea key={activeId + 'notes'} name="notes" defaultValue={displayData.notes} rows={2} className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm resize-none" placeholder="Notes..." />
+                                                        <textarea
+                                                            name="notes"
+                                                            value={displayData.notes || ''}
+                                                            onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, notes: e.target.value } })}
+                                                            rows={2}
+                                                            className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm resize-none"
+                                                            placeholder="Notes..."
+                                                        />
+                                                    </div>
+
+                                                    {/* TAGS INPUT Section */}
+                                                    <div className="space-y-4">
+                                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Tags</label>
+                                                        <div className="relative group">
+                                                            <Tag size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                            <input
+                                                                name="tags"
+                                                                value={displayData.tags?.join(', ') || ''}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value;
+                                                                    const newTags = val.split(',').map(s => s.trim()); // Keep empty strings while typing comma
+                                                                    // Actually for controlled input of array joined by comma, proper handling is tricky.
+                                                                    // Simpler to just store the string in a temporary state?
+                                                                    // But efficient way here is just treating tags as string for editing, and array for storage.
+                                                                    // But displayData.tags is array.
+                                                                    // Let's assume displayData.tags IS array.
+                                                                    // We need to be careful not to create new array on every keystroke if it causes issues.
+                                                                    // Better: Update the array.
+                                                                    // Limit: User types "Tag1, " -> array ["Tag1", ""]
+                                                                    updateItemStatus(activeId, activeItem.status, { data: { ...displayData, tags: val.split(',') } });
+
+                                                                    // Logic for tag suggestion query
+                                                                    const parts = val.split(',').map(p => p.trim());
+                                                                    setTagQuery(parts[parts.length - 1]);
+                                                                }}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                placeholder="Tags (comma separated)..."
+                                                            />
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-2 px-1 min-h-[28px]">
+                                                            {(tagQuery ?
+                                                                availableTags.filter(t => t.toLowerCase().includes(tagQuery.toLowerCase()) && !displayData.tags?.map(dt => dt.trim()).includes(t)) :
+                                                                suggestedTags
+                                                            ).slice(0, 8).map(tag => (
+                                                                <button
+                                                                    key={tag}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        // Append tag
+                                                                        let currentTags = [...(displayData.tags || [])];
+                                                                        // Remove the partial tag currently being typed (last element usually empty or partial)
+                                                                        // Actually if we just rely on string matching it's easier.
+                                                                        // Let's safely assume user wants to ADD this tag.
+                                                                        // currentTags coming from input split might be ["Tag1", " par"]
+                                                                        // We want ["Tag1", "SelectedTag"]
+                                                                        // A simple way used in EditModal:
+                                                                        // But here we need to update state directly.
+
+                                                                        // Clean current tags
+                                                                        let cleanTags = currentTags.map(t => t.trim()).filter(Boolean);
+
+                                                                        // If we are filtering by query, replace the last partial match
+                                                                        if (tagQuery) {
+                                                                            // Remove last if it matches query partially? 
+                                                                            // Actually simpler: just append if unique.
+                                                                            // But standard UI is autocomplete replace.
+                                                                            // Let's just append for safety and simplicity in this complex state.
+                                                                            if (!cleanTags.includes(tag)) cleanTags.push(tag);
+                                                                        } else {
+                                                                            if (!cleanTags.includes(tag)) cleanTags.push(tag);
+                                                                        }
+
+                                                                        updateItemStatus(activeId, activeItem.status, { data: { ...displayData, tags: cleanTags } });
+                                                                        setTagQuery('');
+                                                                    }}
+                                                                    className="text-[10px] px-2 py-1 rounded-md border border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-[#5e52ff] transition-colors"
+                                                                >
+                                                                    + {tag}
+                                                                </button>
+                                                            ))}
+                                                        </div>
                                                     </div>
 
                                                     <div className="space-y-4">
                                                         <div className="grid grid-cols-2 gap-4">
-                                                            <input key={activeId} name="email" type="email" defaultValue={displayData.email} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Email" />
-                                                            <input key={activeId} name="phone" defaultValue={displayData.phone} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Phone" />
+                                                            <input
+                                                                name="email"
+                                                                type="email"
+                                                                value={displayData.email || ''}
+                                                                onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, email: e.target.value } })}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                placeholder="Email"
+                                                            />
+                                                            <input
+                                                                name="phone"
+                                                                value={displayData.phone || ''}
+                                                                onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, phone: e.target.value } })}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                placeholder="Phone"
+                                                            />
                                                         </div>
                                                     </div>
 
@@ -456,7 +555,7 @@ export default function AddContactForm({ availableTags = [] }) {
                                                             </div>
                                                             <button
                                                                 type="button"
-                                                                onClick={handleDraftEnrich} // Use the new handler
+                                                                onClick={handleDraftEnrich}
                                                                 disabled={isEnriching}
                                                                 className="flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-full transition-all font-bold border border-[#5e52ff]/20 cursor-pointer"
                                                             >
@@ -465,9 +564,9 @@ export default function AddContactForm({ availableTags = [] }) {
                                                             </button>
                                                         </div>
                                                         <textarea
-                                                            key={activeId + 'ai'}
                                                             name="aiSummary"
-                                                            defaultValue={displayData.aiSummary}
+                                                            value={displayData.aiSummary || ''} // Controlled: will update when handleDraftEnrich updates state
+                                                            onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, aiSummary: e.target.value } })}
                                                             rows={3}
                                                             className="w-full bg-[#5e52ff]/5 border border-[#5e52ff]/10 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-[#5e52ff] transition-all text-xs leading-relaxed resize-none"
                                                             placeholder="AI generated background info..."

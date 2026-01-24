@@ -124,6 +124,7 @@ export async function enrichSingleContactAction(id) {
 
         3. **TAGGING (New)**:
            - Assign 3-5 relevant tags.
+           - **MANDATORY**: Identify the **Country/Region** (e.g. "Taiwan", "Japan", "USA", "Germany", "Switzerland", "Hong Kong", "China") and add it as a tag.
            - **PRIORITY**: REUSE "Existing System Tags" if they fit (e.g. "Tech", "Art", "Music", "Curator").
            - If no existing tag fits, create a NEW concise tag (e.g. "Semiconductors", "Government", "VC").
            - Tags should be English or Traditional Chinese (consistent with existing).
@@ -218,6 +219,7 @@ export async function enrichDraftAction(currData) {
 
         3. **TAGGING**:
            - Assign 3-5 relevant tags.
+           - **MANDATORY**: Identify the **Country/Region** (e.g. "Taiwan", "Japan", "USA", "Germany", "Switzerland", "Hong Kong", "China") and add it as a tag.
            - **PRIORITY**: REUSE "Existing System Tags" if they fit.
            - Tags should be English or Traditional Chinese (consistent with existing).
 
