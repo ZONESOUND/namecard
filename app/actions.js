@@ -124,19 +124,21 @@ export async function enrichSingleContactAction(id) {
 
         3. **TAGGING (Strict Taxonomy)**:
            - You MUST classify the contact using the following specific categories if applicable:
-             - **Organization**: `Venue` (場館/中心/美術館), `Foundation` (基金會), `Government` (政府單位), `Gallery` (畫廊), `Festival` (藝術節), `Company` (公司), `University` (學校/學術).
-             - **Role**: `Curator` (策展人), `Director` (總監/館長), `Producer` (製作人), `Artist` (藝術家), `Critic` (評論).
+             - **Organization**: `Venue` (場館/中心/美術館/劇院), `Foundation` (基金會), `Government` (政府單位), `Gallery` (畫廊), `Festival` (藝術節), `Company` (公司), `University` (學校/學術).
+             - **Role**: `Curator` (策展人), `Director` (總監/館長), `Producer` (製作人), `Artist` (藝術家), `Critic` (評論), `Teacher` (教師/教授).
              - **Field**: `Performing Arts` (表演藝術), `Visual Arts` (視覺藝術), `New Media` (新媒體), `Music` (音樂), `Tech` (科技), `Film` (電影).
              - **Region**: `Taiwan`, `Japan`, `USA`, `Germany`, `Switzerland`, `Hong Kong`, `China`, `UK`.
            
            - **Rules**:
              - Assign 4-6 tags total.
-             - **PRIORITY 1**: Always tag the **Region**.
-             - **PRIORITY 2**: Always tag the **Organization Type** (e.g. if they work at a Museum, tag "Venue").
-             - **PRIORITY 3**: Always tag the **Role** (e.g. "Curator").
-             - **DO NOT** use generic tags like "Professional", "Business", "Creative", "Work".
-             - Use Traditional Chinese for the Role/Org tags if the input is Chinese, otherwise English. Keep Regions in English.
-             - Re-use existing system tags if they match these categories.
+             - **PRIORITY 1 - Organization Type (CRITICAL)**:
+               - If the organization is a Performing Arts Center (e.g., National Theater & Concert Hall, Weiwuying, Taichung Opera House), you **MUST** tag it as `Venue` (場館).
+               - You can ALSO add the specific abbreviation (e.g., "NTCH"), but `Venue` is mandatory.
+             - **PRIORITY 2 - Role Precision**:
+               - **DO NOT** use `Director` for a School Teacher (老師). Use `Teacher` or `Professor`. 
+               - Only use `Director` for high-level executives (Artistic Director, Museum Director, Executive Director).
+             - **PRIORITY 3 - Region**: Always tag the region.
+             - Use Traditional Chinese for the Role/Org tags if the input is Chinese, otherwise English. Keep Regions in English. 
 
         4. **OUTPUT**:
            - Return JSON.
