@@ -56,6 +56,7 @@ async function run() {
         }
 
         const survivors = [];
+        let duplicatesCount = 0;
 
         for (const [key, group] of map.entries()) {
             if (group.length === 1) {
@@ -65,54 +66,45 @@ async function run() {
 
             // Multiple records found for this key. Smart Merge.
             console.log(`\n🔄 Merging ${group.length} records for key: ${key}`);
+            const names = group.map(g => g.name).join(', ');
+            console.log(`   Names involved: ${names}`);
 
             // Sort by timestamp (newest first)
-            // If updatedAt is missing, fall back to addedAt, then current time
             group.sort((a, b) => {
                 const dateA = new Date(a.updatedAt || a.addedAt || 0);
                 const dateB = new Date(b.updatedAt || b.addedAt || 0);
                 return dateB - dateA; // Descending (Newest first)
             });
 
-            const survivor = group[0]; // This is the newest one (so user's latest edit wins)
+            const survivor = group[0];
             const others = group.slice(1);
 
-            // Merge valuable data from older records if missing in survivor
+            // Merge valuable data form older records
             for (const other of others) {
-                duplicates.push(other); // Mark for deletion
+                duplicatesCount++;
+                console.log(`   ❌ Marking as duplicate: ${other.name} (ID: ${other.id})`);
 
                 if (!survivor.imageUrl && other.imageUrl) survivor.imageUrl = other.imageUrl;
                 if (!survivor.notes && other.notes) survivor.notes = other.notes;
                 if (!survivor.metAt && other.metAt) survivor.metAt = other.metAt;
+                // Don't overwrite title if survivor has one, as survivor is newer.
                 if (!survivor.title && other.title) survivor.title = other.title;
-                if (!survivor.tags) survivor.tags = [];
-                if (other.tags) {
-                    survivor.tags = [...new Set([...survivor.tags, ...other.tags])];
-                }
+
+                // Merge tags
+                const tagSet = new Set(survivor.tags || []);
+                (other.tags || []).forEach(t => tagSet.add(t));
+                survivor.tags = Array.from(tagSet);
             }
 
             survivors.push(survivor);
         }
 
-        // 3. Delete Duplicate .md files
-        for (const dup of duplicates) {
-            const safeName = dup.name.trim().replace(/[\\/:"*?<>|]+/g, '_');
-            const mdKey = `Cards/${safeName}.md`;
+        // 3. Delete Duplicate .md files (OPTIONAL / RISKY)
+        // We do NOT delete .md files for now, because the system relies on Name-based .md files.
+        // If we delete "Lin.md" but "Lin" is the survivor, we break it.
+        // If we delete "Lin_Old.md" and survivor is "Lin_New", we can delete "Lin_Old.md".
+        // But for safety, let's just clean the JSON index first. The orphaned .md files are harmless.
 
-            // Check if survivor uses the same mdKey (likely), if so, DON'T delete it!
-            const survivor = map.get(`${dup.name?.trim().toLowerCase()}|${dup.email?.trim().toLowerCase()}|${dup.company?.trim().toLowerCase()}`);
-
-            // If the ID is different but the name is same, the MD file overwrites each other anyway.
-            // But we should check if the ID is different.
-
-            console.log(`  Deleting duplicate record: ${dup.name} (ID: ${dup.id.substr(0, 8)}...)`);
-
-            // Note: We don't delete MD files because multiple IDs might map to same Name.md 
-            // (The system overwrites MD based on Name). 
-            // So if we delete the MD, the survivor might lose its file.
-            // Since we are keeping one survivor, we just need to ensure the JSON is clean.
-            // The survivor will just own the MD file.
-        }
 
         // 4. Update JSON in R2
         console.log(`\n💾 Saving cleaned database (${survivors.length} contacts)...`);
