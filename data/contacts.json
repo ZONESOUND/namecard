@@ -890,9 +890,9 @@
     "updatedAt": "2026-01-24T04:21:07.607Z"
   },
   {
-    "name": "翁士博 (Shipo Weng)",
-    "title": "Executive Assistant (特助)",
-    "company": "",
+    "name": "翁士博",
+    "title": "特助",
+    "company": "Lydia AI",
     "email": "shipo@lydia.ai",
     "phone": "0958705070",
     "metAt": null,
@@ -903,7 +903,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:21:13.151Z",
-    "updatedAt": "2026-01-24T04:21:13.151Z"
+    "updatedAt": "2026-01-24T05:37:25.654Z",
+    "aiSummary": ""
   },
   {
     "name": "楊凱婷 (Ada Kai-Ting Yang)",
@@ -920,5 +921,25 @@
     "history": [],
     "addedAt": "2026-01-24T04:21:24.959Z",
     "updatedAt": "2026-01-24T04:21:34.448Z"
+  },
+  {
+    "name": "許峻郎",
+    "title": "執行長",
+    "company": "財團法人台積電文教基金會",
+    "email": "clhsun@tsmc.com",
+    "phone": "03-5636688 Ext. 7125034",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "TSMC",
+      "基金會"
+    ],
+    "jobStatus": null,
+    "id": "b03403c0-573e-491c-8085-04a9cafb0e63",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-24T05:35:31.826Z",
+    "updatedAt": "2026-01-24T05:42:05.526Z",
+    "aiSummary": ""
   }
 ]

@@ -99,11 +99,36 @@ async function run() {
             survivors.push(survivor);
         }
 
-        // 3. Delete Duplicate .md files (OPTIONAL / RISKY)
-        // We do NOT delete .md files for now, because the system relies on Name-based .md files.
-        // If we delete "Lin.md" but "Lin" is the survivor, we break it.
-        // If we delete "Lin_Old.md" and survivor is "Lin_New", we can delete "Lin_Old.md".
-        // But for safety, let's just clean the JSON index first. The orphaned .md files are harmless.
+        // 3. Delete Duplicate .md files
+        for (const dup of duplicates) {
+            const safeName = dup.name.trim().replace(/[\\/:"*?<>|]+/g, '_');
+            const mdKey = `Cards/${safeName}.md`;
+
+            // CRITICAL: Only delete if the survivor has a DIFFERENT name.
+            // If name is same, the survivor overwrites it, so NO delete needed (and delete would be dangerous).
+
+            // Find survivor for this duplicate
+            const sKey = dup.email && dup.email.length > 3
+                ? `email:${dup.email.trim().toLowerCase()}`
+                : `nc:${dup.name?.trim().toLowerCase()}|${dup.company?.trim().toLowerCase()}`;
+
+            let survivor = null;
+            if (map.has(sKey)) {
+                // The group was sorted, so survivor is index 0
+                survivor = map.get(sKey)[0];
+            }
+
+            if (survivor && survivor.name !== dup.name) {
+                console.log(`  🗑️  Deleting duplicate file in R2: ${mdKey} (Survivor is ${survivor.name})`);
+                try {
+                    await R2.send(new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: mdKey }));
+                } catch (e) {
+                    console.error(`     Failed to delete ${mdKey}`, e.message);
+                }
+            } else {
+                console.log(`  Skipping file delete for ${dup.name} (Same name as survivor or survivor not found)`);
+            }
+        }
 
 
         // 4. Update JSON in R2
