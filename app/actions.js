@@ -107,25 +107,28 @@ export async function enrichSingleContactAction(id) {
         Email: ${contact.email}
 
         **Instructions**:
-        1. **CORRECTION**: 
+        1. **CORRECTION (High Priority)**: 
            - Compare the 'Current Data' with the attached Business Card image (if available) and your internal knowledge.
-           - Fix obvious OCR errors (e.g., "簡瑞齊" -> "簡瑞春" if the image/context suggests it).
-           - Fix company names to their official full titles (e.g. "北流" -> "台北流行音樂中心").
-           - Fix job titles to be professional.
+           - FIX OCR errors in Name, Title, Company (e.g., "簡瑞齊" -> "簡瑞春").
+           - **Check Email/Phone**: If the OCR email is wrong/typo'd but readable on the card, FIX IT in the 'email' field. 
+           - Do NOT put corrected contact info in the summary; put it in the respective fields.
         
-        2. **ENRICHMENT**:
+        2. **ENRICHMENT (Summary)**:
            - Generate a 'aiSummary' (80 words max, Traditional Chinese, professional tone).
+           - **STRICTLY FORBIDDEN**: Do NOT output the email, phone, or address in this summary text. We have dedicated fields for them.
+           - Focus ONLY on the person's expertise, the organization's function, or relevant context.
         
         3. **OUTPUT**:
            - Return a JSON object with the finalized fields. 
            - If a field matches the current data exactly, you can still return it. 
-           - If you are unsure about a correction, stick to the Current Data.
         
         Format:
         {
             "name": "Corrected Name",
             "title": "Corrected Title",
             "company": "Corrected Company",
+            "email": "Corrected Email",
+            "phone": "Corrected Phone",
             "aiSummary": "..."
         }`;
 
@@ -145,6 +148,8 @@ export async function enrichSingleContactAction(id) {
         if (result.name && result.name !== contact.name) { contact.name = result.name; hasChanges = true; }
         if (result.title && result.title !== contact.title) { contact.title = result.title; hasChanges = true; }
         if (result.company && result.company !== contact.company) { contact.company = result.company; hasChanges = true; }
+        if (result.email && result.email !== contact.email) { contact.email = result.email; hasChanges = true; }
+        if (result.phone && result.phone !== contact.phone) { contact.phone = result.phone; hasChanges = true; }
 
         // Always update summary
         contact.aiSummary = result.aiSummary;
