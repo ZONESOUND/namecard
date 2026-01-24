@@ -81,6 +81,7 @@ async function run() {
 
             // Merge valuable data form older records
             for (const other of others) {
+                duplicates.push(other); // Add this line back!
                 duplicatesCount++;
                 console.log(`   ❌ Marking as duplicate: ${other.name} (ID: ${other.id})`);
 
