@@ -136,66 +136,78 @@ export default function AddContactForm({ availableTags = [] }) {
         });
     };
 
+    const [isSaving, setIsSaving] = useState(false);
+
     const handleSave = async (formData) => {
-        const activeItem = queue.find(i => i.id === activeId);
-        if (!activeItem) {
-            await addContactAction(formData);
-            setIsOpen(false);
-            return;
-        }
+        if (isSaving) return; // Prevent double click
+        setIsSaving(true);
 
-        if (activeItem.data?.aiSummary) {
-            formData.set('aiSummary', activeItem.data.aiSummary);
-        }
+        try {
+            const activeItem = queue.find(i => i.id === activeId);
+            if (!activeItem) {
+                await addContactAction(formData);
+                setIsOpen(false);
+                return;
+            }
 
-        if (activeItem.data?.imageUrl) {
-            formData.set('imageUrl', activeItem.data.imageUrl);
-        }
+            if (activeItem.data?.aiSummary) {
+                formData.set('aiSummary', activeItem.data.aiSummary);
+            }
 
-        let duplicateId = activeItem.duplicate?.id;
-        if (!duplicateId) {
-            const dataToTest = {
-                name: formData.get('name'),
+            if (activeItem.data?.imageUrl) {
+                formData.set('imageUrl', activeItem.data.imageUrl);
+            }
+
+            let duplicateId = activeItem.duplicate?.id;
+            if (!duplicateId) {
+                const dataToTest = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    company: formData.get('company')
+                };
+                const freshDuplicate = await checkDuplicateAction(dataToTest);
+                if (freshDuplicate) {
+                    duplicateId = freshDuplicate.id;
+                }
+            }
+
+            if (duplicateId) {
+                formData.set('id', duplicateId);
+            }
+
+            const savedData = {
+                ...activeItem.data,
+                name: formData.get('name') || activeItem.data?.name,
+                title: formData.get('title'),
+                company: formData.get('company'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
-                company: formData.get('company')
+                tags: formData.get('tags')?.split(',').map(s => s.trim()).filter(Boolean) || [],
+                metAt: formData.get('metAt') || activeItem.data?.metAt,
+                notes: formData.get('notes') || activeItem.data?.notes,
+                aiSummary: formData.get('aiSummary') || activeItem.data?.aiSummary,
+                imageUrl: activeItem.data?.imageUrl
             };
-            const freshDuplicate = await checkDuplicateAction(dataToTest);
-            if (freshDuplicate) {
-                duplicateId = freshDuplicate.id;
+
+            await addContactAction(formData);
+
+            updateItemStatus(activeId, 'saved', {
+                data: savedData
+            });
+
+            const nextItem = queue.find(i => i.id !== activeId && i.status !== 'saved');
+            if (nextItem) {
+                setActiveId(nextItem.id);
+                setTagQuery('');
+            } else {
+                setActiveId(null);
             }
-        }
-
-        if (duplicateId) {
-            formData.set('id', duplicateId);
-        }
-
-        const savedData = {
-            ...activeItem.data,
-            name: formData.get('name') || activeItem.data?.name,
-            title: formData.get('title'),
-            company: formData.get('company'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            tags: formData.get('tags')?.split(',').map(s => s.trim()).filter(Boolean) || [],
-            metAt: formData.get('metAt') || activeItem.data?.metAt,
-            notes: formData.get('notes') || activeItem.data?.notes,
-            aiSummary: formData.get('aiSummary') || activeItem.data?.aiSummary,
-            imageUrl: activeItem.data?.imageUrl // Pass the image URL!
-        };
-
-        await addContactAction(formData);
-
-        updateItemStatus(activeId, 'saved', {
-            data: savedData
-        });
-
-        const nextItem = queue.find(i => i.id !== activeId && i.status !== 'saved');
-        if (nextItem) {
-            setActiveId(nextItem.id);
-            setTagQuery('');
-        } else {
-            setActiveId(null);
+        } catch (e) {
+            console.error(e);
+            alert('Failed to save. Please try again.');
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -404,8 +416,8 @@ export default function AddContactForm({ availableTags = [] }) {
                                                     {isBatchMode && (
                                                         <button type="button" onClick={() => updateItemStatus(activeId, 'saved')} className="px-6 py-3 text-gray-500 hover:text-white transition-colors text-sm font-bold">Skip</button>
                                                     )}
-                                                    <button type="submit" disabled={activeItem?.status === 'parsing'} className="flex-1 bg-[#5e52ff] hover:bg-[#4b3ff0] disabled:bg-gray-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-[#5e52ff]/20">
-                                                        {isBatchMode ? (activeItem?.status === 'saved' ? 'Update & Next' : 'Save & Next') : 'Add Contact'}
+                                                    <button type="submit" disabled={activeItem?.status === 'parsing' || isSaving} className="flex-1 bg-[#5e52ff] hover:bg-[#4b3ff0] disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-[#5e52ff]/20">
+                                                        {isSaving ? 'Saving...' : (isBatchMode ? (activeItem?.status === 'saved' ? 'Update & Next' : 'Save & Next') : 'Add Contact')}
                                                     </button>
                                                 </div>
                                             </form>
