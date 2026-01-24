@@ -1,29 +1,26 @@
-# Smart Name Card Manager
+# Smart Name Card Manager | 智慧名片管理系統
 
-A premium, AI-powered contact management system designed for creative professionals. It digitizes, organizes, and actively monitors your professional network with a "Local-First, Cloud-Ready" architecture.
+A dual-mode (Local + Cloud) contact management system with AI enrichment, designed for syncing with Obsidian and deploying to Zeabur.
+結合「本地優先」與「雲端部署」的智慧名片系統，支援 AI 自動補充資訊，並可與 Obsidian 筆記軟體同步。
 
-## 🌟 Key Features
+## Features | 功能
+*   **Active Intelligence**: Auto-fill missing contact details using OpenAI. (AI 自動補全背景資訊)
+*   **Dual Storage**:
+    *   **Local**: JSON + Markdown files (Obsidian compatible).
+    *   **Cloud**: Synced with **Cloudflare R2** for web access.
+*   **Secure Access**: Password-protected login. (密碼保護)
 
-*   **Active Intelligence**: Automatically enriches contact details (background, company info) using OpenAI.
-*   **Dual Storage Engine**:
-    *   **Local Mode**: Stores data in `data.json` and Markdown files for Obsidan compatibility.
-    *   **Cloud Mode**: Seamlessly syncs with **Cloudflare R2** for serverless deployment.
-*   **Secure Access**: Built-in password authentication for web deployment.
-*   **Markdown Mirror**: Every contact is mirrored as a `.md` file, perfect for syncing with Obsidian or other knowledge base tools.
+## Deployment | 部署 (Zeabur)
 
-## 🚀 Deployment (Zeabur)
-
-This project is optimized for deployment on **Zeabur**.
-
-1.  Connect your GitHub repository to Zeabur.
-2.  Add the following **Environment Variables** in Zeabur settings:
+1.  Push code to GitHub.
+2.  Deploy on Zeabur and set these **Environment Variables**:
 
 ```bash
-# Security
-ADMIN_PASSWORD=your_password_here
-JWT_SECRET=generate_a_random_string_here
+# Auth (安全性)
+ADMIN_PASSWORD=your_password
+JWT_SECRET=random_string_xyz
 
-# AI Service
+# AI
 OPENAI_API_KEY=sk-...
 
 # Storage (Cloudflare R2)
@@ -33,21 +30,11 @@ R2_SECRET_ACCESS_KEY=...
 R2_BUCKET_NAME=namecard
 ```
 
-## 🛠 Local Development
+## Local Development | 本地開發
 
-1.  Sidebar dependencies:
-    ```bash
-    npm install
-    ```
-2.  Run the development server:
-    ```bash
-    npm run dev
-    ```
-3.  Open [http://localhost:3000](http://localhost:3000).
+```bash
+npm install
+npm run dev
+# Open http://localhost:3000
+```
 
-## 📂 Project Structure
-
-*   **/app**: Next.js App Router source code.
-*   **/data**: Local fallback storage for the JSON database.
-*   **/Cards**: Local fallback storage for Markdown files.
-*   **/scripts**: Utilities for database migration and cleanup.
