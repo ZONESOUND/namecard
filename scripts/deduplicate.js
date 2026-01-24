@@ -35,35 +35,64 @@ async function run() {
         const map = new Map();
         const duplicates = [];
 
-        // Group by unique key (Name + Email + Company)
+        // Group by unique key
+        // Strategy: 
+        // 1. Primary Key: Email (if exists) -> "email:xxxx@xxx.com"
+        // 2. Fallback Key: Name|Company -> "nc:name|company"
+
         for (const c of contacts) {
-            const key = `${c.name?.trim().toLowerCase()}|${c.email?.trim().toLowerCase()}|${c.company?.trim().toLowerCase()}`;
-
-            if (map.has(key)) {
-                // Determine which one to keep? 
-                // Keep the one with more fields filled, or the latest one.
-                // Assuming multi-click duplicates are mostly identical or very close in time.
-                // Let's keep the OLDER one to avoid breaking existing links? 
-                // Actually usually we keep the NEWEST one in updates, but for pure duplicates it doesn't matter.
-                const existing = map.get(key);
-
-                // Compare modification times if available, or just keep first found
-                // We'll mark the current 'c' as duplicate and keep 'existing'
-                duplicates.push(c);
+            let key = null;
+            if (c.email && c.email.length > 3) {
+                key = `email:${c.email.trim().toLowerCase()}`;
             } else {
-                map.set(key, c);
+                key = `nc:${c.name?.trim().toLowerCase()}|${c.company?.trim().toLowerCase()}`;
+            }
+
+            if (!map.has(key)) {
+                map.set(key, [c]);
+            } else {
+                map.get(key).push(c);
             }
         }
 
-        if (duplicates.length === 0) {
-            console.log("✅ No duplicates found!");
-            return;
+        const survivors = [];
+
+        for (const [key, group] of map.entries()) {
+            if (group.length === 1) {
+                survivors.push(group[0]);
+                continue;
+            }
+
+            // Multiple records found for this key. Smart Merge.
+            console.log(`\n🔄 Merging ${group.length} records for key: ${key}`);
+
+            // Sort by timestamp (newest first)
+            // If updatedAt is missing, fall back to addedAt, then current time
+            group.sort((a, b) => {
+                const dateA = new Date(a.updatedAt || a.addedAt || 0);
+                const dateB = new Date(b.updatedAt || b.addedAt || 0);
+                return dateB - dateA; // Descending (Newest first)
+            });
+
+            const survivor = group[0]; // This is the newest one (so user's latest edit wins)
+            const others = group.slice(1);
+
+            // Merge valuable data from older records if missing in survivor
+            for (const other of others) {
+                duplicates.push(other); // Mark for deletion
+
+                if (!survivor.imageUrl && other.imageUrl) survivor.imageUrl = other.imageUrl;
+                if (!survivor.notes && other.notes) survivor.notes = other.notes;
+                if (!survivor.metAt && other.metAt) survivor.metAt = other.metAt;
+                if (!survivor.title && other.title) survivor.title = other.title;
+                if (!survivor.tags) survivor.tags = [];
+                if (other.tags) {
+                    survivor.tags = [...new Set([...survivor.tags, ...other.tags])];
+                }
+            }
+
+            survivors.push(survivor);
         }
-
-        console.log(`⚠️  Found ${duplicates.length} duplicates. cleaning up...`);
-
-        // 2. Identify Survivors
-        const survivors = Array.from(map.values());
 
         // 3. Delete Duplicate .md files
         for (const dup of duplicates) {
