@@ -19,20 +19,10 @@ export default function AddContactForm({ availableTags = [] }) {
     // Generate unique IDs
     const generateId = () => Math.random().toString(36).substr(2, 9);
 
-    // Helper to add tag from suggestions
-    const addTag = (tag) => {
-        if (!tagsInputRef.current) return;
-        const currentVal = tagsInputRef.current.value;
-        if (currentVal.includes(tag)) return;
-
-        const newVal = currentVal ? `${currentVal}, ${tag}` : tag;
-        tagsInputRef.current.value = newVal;
-    };
-
     const suggestedTags = availableTags.slice(0, 20);
 
-    // Handle File Selection
-    const handleFileSelect = (e) => {
+    // Handle File Selection with Batch Logic
+    const handleFileSelect = async (e) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
@@ -51,7 +41,12 @@ export default function AddContactForm({ availableTags = [] }) {
             setActiveId(newItems[0].id);
         }
 
-        newItems.forEach(item => processItem(item));
+        // Process in batches of 3 to avoid timeouts
+        const BATCH_SIZE = 3;
+        for (let i = 0; i < newItems.length; i += BATCH_SIZE) {
+            const chunk = newItems.slice(i, i + BATCH_SIZE);
+            await Promise.all(chunk.map(item => processItem(item)));
+        }
     };
 
     const processItem = async (item) => {
@@ -114,7 +109,6 @@ export default function AddContactForm({ availableTags = [] }) {
             formData.set('aiSummary', activeItem.data.aiSummary);
         }
 
-        // RE-CHECK for potential duplicate JUST before saving (catches race conditions in batch)
         let duplicateId = activeItem.duplicate?.id;
         if (!duplicateId) {
             const dataToTest = {
@@ -129,12 +123,10 @@ export default function AddContactForm({ availableTags = [] }) {
             }
         }
 
-        // Handle Merge/Update if duplicate exists
         if (duplicateId) {
             formData.set('id', duplicateId);
         }
 
-        // Capture ALL fields to update local state so navigation back works
         const savedData = {
             ...activeItem.data,
             name: formData.get('name') || activeItem.data?.name,
@@ -150,7 +142,6 @@ export default function AddContactForm({ availableTags = [] }) {
 
         await addContactAction(formData);
 
-        // Update item in queue with the FULL saved data
         updateItemStatus(activeId, 'saved', {
             data: savedData
         });
@@ -158,7 +149,7 @@ export default function AddContactForm({ availableTags = [] }) {
         const nextItem = queue.find(i => i.id !== activeId && i.status !== 'saved');
         if (nextItem) {
             setActiveId(nextItem.id);
-            setTagQuery(''); // Reset tag query
+            setTagQuery('');
         } else {
             setActiveId(null);
         }
@@ -182,7 +173,7 @@ export default function AddContactForm({ availableTags = [] }) {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-8 right-8 bg-[#5e52ff] hover:bg-[#4b3ff0] text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-2 font-medium transition-all hover:scale-105 active:scale-95 z-50"
+                className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#5e52ff] hover:bg-[#4b3ff0] text-white p-3 md:px-6 md:py-4 rounded-full shadow-2xl flex items-center gap-2 font-medium transition-all hover:scale-105 active:scale-95 z-50"
             >
                 <Plus size={24} />
                 <span className="hidden md:inline">Add Contact</span>
@@ -194,19 +185,20 @@ export default function AddContactForm({ availableTags = [] }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-0 md:p-4"
                         onClick={handleClose}
                     >
+                        {/* Modal Container: Scroll Behavior Handling for Mobile */}
                         <motion.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className={`bg-[#13151b] border border-white/10 w-full ${isBatchMode ? 'max-w-6xl' : 'max-w-2xl'} rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] transition-all duration-300`}
+                            className={`bg-[#13151b] border-t md:border border-white/10 w-full ${isBatchMode ? 'max-w-6xl' : 'max-w-2xl'} h-[90vh] mt-[10vh] md:mt-0 md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col md:flex-row transition-all duration-300 overflow-hidden`}
                             onClick={e => e.stopPropagation()}
                         >
 
                             {/* LEFT PANEL: Queue List & Upload */}
-                            <div className={`w-full ${isBatchMode ? 'md:w-1/3 border-b md:border-b-0 md:border-r border-white/5' : 'hidden'} bg-[#0b0c10] flex flex-col`}>
+                            <div className={`w-full ${isBatchMode ? 'md:w-1/3 border-b md:border-b-0 md:border-r border-white/5 h-48 md:h-full' : 'hidden'} bg-[#0b0c10] flex flex-col md:flex-col shrink-0`}>
                                 <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#13151b]">
                                     <h3 className="text-white font-bold text-sm">Batch Queue ({pendingCount})</h3>
                                     <button
@@ -235,35 +227,25 @@ export default function AddContactForm({ availableTags = [] }) {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className={`text-sm font-medium truncate ${item.status === 'saved' ? 'text-gray-500 line-through' : 'text-white'}`}>
-                                                    {item.data?.name || "Business Card"}
+                                                    {item.data?.name || "Processing..."}
                                                 </p>
                                                 <p className="text-xs text-gray-500 truncate">
-                                                    {item.status === 'idle' && 'Waiting...'}
-                                                    {item.status === 'parsing' && 'Analyzing...'}
-                                                    {item.status === 'success' && 'Ready to review'}
-                                                    {item.status === 'error' && 'Failed'}
-                                                    {item.status === 'saved' && 'Saved'}
+                                                    {item.status}
                                                 </p>
                                             </div>
                                             {item.status === 'parsing' && <Loader2 size={16} className="text-[#5e52ff] animate-spin" />}
                                             {item.status === 'success' && <div className="w-2 h-2 rounded-full bg-blue-500" />}
                                             {item.status === 'error' && <AlertCircle size={16} className="text-red-500" />}
                                             {item.status === 'saved' && <CheckCircle2 size={16} className="text-green-500" />}
-                                            <button
-                                                onClick={(e) => removeItem(item.id, e)}
-                                                className="absolute right-2 top-2 p-1.5 bg-black/50 rounded-md text-white/60 hover:text-red-400 hover:bg-black opacity-0 group-hover:opacity-100 transition-opacity"
-                                            >
-                                                <Trash2 size={12} />
-                                            </button>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
                             {/* RIGHT PANEL: Form */}
-                            <div className="flex-1 flex flex-col min-w-0 bg-[#0b0c10]">
-                                <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#13151b] flex-shrink-0">
-                                    <h2 className="text-xl font-bold text-white">
+                            <div className="flex-1 flex flex-col min-w-0 bg-[#0b0c10] overflow-hidden">
+                                <div className="p-4 md:p-6 border-b border-white/5 flex justify-between items-center bg-[#13151b] flex-shrink-0 z-10">
+                                    <h2 className="text-lg md:text-xl font-bold text-white">
                                         {isBatchMode ? (activeItem ? 'Review Details' : 'Batch Processor') : 'New Connection'}
                                     </h2>
                                     <button onClick={handleClose} className="text-gray-500 hover:text-white transition-colors">
@@ -271,13 +253,13 @@ export default function AddContactForm({ availableTags = [] }) {
                                     </button>
                                 </div>
 
-                                <div className="p-6 overflow-y-auto flex-1 bg-[#13151b]">
+                                <div className="p-4 md:p-6 overflow-y-auto flex-1 bg-[#13151b]">
                                     {(!isBatchMode || (isBatchMode && !activeItem && queue.length === 0)) && (
                                         <div className="mb-6">
                                             <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileSelect} className="hidden" />
                                             <div
                                                 onClick={() => fileInputRef.current?.click()}
-                                                className="border-2 border-dashed border-white/10 rounded-2xl p-16 flex flex-col items-center justify-center text-center hover:border-[#5e52ff]/50 hover:bg-[#5e52ff]/5 transition-all cursor-pointer group"
+                                                className="border-2 border-dashed border-white/10 rounded-2xl p-8 md:p-16 flex flex-col items-center justify-center text-center hover:border-[#5e52ff]/50 hover:bg-[#5e52ff]/5 transition-all cursor-pointer group"
                                             >
                                                 <Upload className="text-gray-500 mb-4 group-hover:text-[#5e52ff] transition-colors" size={48} />
                                                 <p className="text-xl text-white font-bold mb-1">Drop Business Cards Here</p>
@@ -303,33 +285,18 @@ export default function AddContactForm({ availableTags = [] }) {
                                                         <p className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-1">Match Found in CRM</p>
                                                         <p className="text-sm text-gray-300 mb-3">
                                                             This person already exists: <span className="text-white font-bold">{activeItem.duplicate.name}</span>
-                                                            {activeItem.duplicate.title && (
-                                                                <> as <span className="text-amber-200">{activeItem.duplicate.title}</span> at <span className="text-amber-200">{activeItem.duplicate.company}</span></>
-                                                            )}
                                                         </p>
-
                                                         {activeItem.duplicate.title !== displayData.title && (
                                                             <div className="bg-black/40 p-3 rounded-lg border border-white/5 space-y-2">
                                                                 <p className="text-xs font-bold text-gray-400 uppercase">Career Update Detected</p>
-                                                                <div className="flex items-center gap-4">
-                                                                    <div className="flex-1">
-                                                                        <p className="text-[10px] text-gray-500 uppercase">Existing</p>
-                                                                        <p className="text-xs text-gray-400">{activeItem.duplicate.title || 'No Title'}</p>
-                                                                    </div>
-                                                                    <div className="text-gray-600">→</div>
-                                                                    <div className="flex-1">
-                                                                        <p className="text-[10px] text-amber-500 uppercase font-bold">New Card</p>
-                                                                        <p className="text-xs text-white font-medium">{displayData.title || 'No Title'}</p>
-                                                                    </div>
-                                                                </div>
                                                                 <div className="flex gap-4 mt-2 pt-2 border-t border-white/5">
                                                                     <label className="flex items-center gap-2 cursor-pointer group">
                                                                         <input type="radio" name="jobStatus" value="history" defaultChecked className="accent-[#5e52ff]" />
-                                                                        <span className="text-[11px] text-gray-300 group-hover:text-white transition-colors underline decoration-dotted">換職位了 (Archive Old)</span>
+                                                                        <span className="text-[11px] text-gray-300 group-hover:text-white">Archive Old</span>
                                                                     </label>
                                                                     <label className="flex items-center gap-2 cursor-pointer group">
                                                                         <input type="radio" name="jobStatus" value="concurrent" className="accent-[#5e52ff]" />
-                                                                        <span className="text-[11px] text-gray-300 group-hover:text-white transition-colors underline decoration-dotted">並存職位 (Keep Both)</span>
+                                                                        <span className="text-[11px] text-gray-300 group-hover:text-white">Keep Both</span>
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -338,7 +305,7 @@ export default function AddContactForm({ availableTags = [] }) {
                                                 </div>
                                             )}
 
-                                            <form key={activeId} action={handleSave} className="space-y-8">
+                                            <form key={activeId} action={handleSave} className="space-y-8 pb-12">
                                                 <div className="space-y-6">
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Professional Identity</label>
@@ -353,7 +320,7 @@ export default function AddContactForm({ availableTags = [] }) {
                                                                 ));
                                                             }}
                                                             className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
-                                                            placeholder="Full Name (Leave empty if only company)"
+                                                            placeholder="Full Name"
                                                         />
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <input key={activeId} name="title" defaultValue={displayData.title} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Title" />
@@ -363,72 +330,23 @@ export default function AddContactForm({ availableTags = [] }) {
 
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Relationship Context</label>
-                                                        <div className="relative">
-                                                            <Calendar size={16} className="absolute left-3.5 top-3.5 text-gray-500" />
-                                                            <input key={activeId} name="metAt" defaultValue={displayData.metAt} className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm" placeholder="Where and when did you meet? (e.g. 2024 Art Expo)" />
-                                                        </div>
-                                                        <div className="relative">
-                                                            <AlignLeft size={16} className="absolute left-3.5 top-3.5 text-gray-500" />
-                                                            <textarea key={activeId} name="notes" defaultValue={displayData.notes} rows={2} className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm resize-none" placeholder="Additional notes or context..." />
-                                                        </div>
+                                                        <textarea key={activeId + 'notes'} name="notes" defaultValue={displayData.notes} rows={2} className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm resize-none" placeholder="Notes..." />
                                                     </div>
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Contact Details & Tags</label>
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <input key={activeId} name="email" type="email" defaultValue={displayData.email} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Email" />
                                                             <input key={activeId} name="phone" defaultValue={displayData.phone} className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all" placeholder="Phone" />
                                                         </div>
-                                                        <div className="relative">
-                                                            <Tag size={16} className="absolute left-3.5 top-3.5 text-gray-500" />
-                                                            <input
-                                                                key={activeId}
-                                                                ref={tagsInputRef}
-                                                                name="tags"
-                                                                defaultValue={displayData.tags?.join(', ')}
-                                                                onChange={(e) => {
-                                                                    const val = e.target.value;
-                                                                    const parts = val.split(',').map(p => p.trim());
-                                                                    const lastPart = parts[parts.length - 1];
-                                                                    setTagQuery(lastPart);
-                                                                }}
-                                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
-                                                                placeholder="Tags (comma separated)..."
-                                                            />
-                                                        </div>
-
-                                                        {/* Dynamic Suggested Tags */}
-                                                        <div className="flex flex-wrap gap-2 px-1 min-h-[24px]">
-                                                            {(tagQuery ?
-                                                                availableTags.filter(t => t.toLowerCase().includes(tagQuery.toLowerCase()) && !displayData.tags?.includes(t)) :
-                                                                availableTags.slice(0, 8)
-                                                            ).slice(0, 10).map(tag => (
-                                                                <button
-                                                                    key={tag}
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        const currentParts = tagsInputRef.current.value.split(',').map(p => p.trim());
-                                                                        currentParts[currentParts.length - 1] = tag;
-                                                                        tagsInputRef.current.value = [...new Set(currentParts)].join(', ') + ', ';
-                                                                        setTagQuery('');
-                                                                        tagsInputRef.current.focus();
-                                                                    }}
-                                                                    className="text-[10px] px-2 py-0.5 rounded border border-[#5e52ff]/30 bg-[#5e52ff]/5 text-[#5e52ff] hover:bg-[#5e52ff] hover:text-white transition-all font-medium"
-                                                                >
-                                                                    {tagQuery ? `+ ${tag}` : `#${tag}`}
-                                                                </button>
-                                                            ))}
-                                                        </div>
                                                     </div>
 
-                                                    {/* AI Background Field */}
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between ml-1">
-                                                            <label className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest pl-1">AI Intelligence & Research</label>
+                                                            <label className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest pl-1">AI Intelligence</label>
                                                             <Sparkles className="text-[#5e52ff]" size={14} />
                                                         </div>
                                                         <textarea
-                                                            key={activeId}
+                                                            key={activeId + 'ai'}
                                                             name="aiSummary"
                                                             defaultValue={displayData.aiSummary}
                                                             rows={3}
@@ -438,12 +356,12 @@ export default function AddContactForm({ availableTags = [] }) {
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-6 border-t border-white/5 flex gap-3">
+                                                <div className="pt-6 border-t border-white/5 flex gap-3 sticky bottom-0 bg-[#13151b] pb-2">
                                                     {isBatchMode && (
                                                         <button type="button" onClick={() => updateItemStatus(activeId, 'saved')} className="px-6 py-3 text-gray-500 hover:text-white transition-colors text-sm font-bold">Skip</button>
                                                     )}
-                                                    <button type="submit" disabled={activeItem?.status === 'parsing'} className="flex-1 bg-[#5e52ff] hover:bg-[#4b3ff0] disabled:bg-gray-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-[#5e52ff]/20 flex items-center justify-center gap-2">
-                                                        {isBatchMode ? (activeItem?.status === 'saved' ? 'Update & Next' : 'Save & Next') : 'Add to Connections'}
+                                                    <button type="submit" disabled={activeItem?.status === 'parsing'} className="flex-1 bg-[#5e52ff] hover:bg-[#4b3ff0] disabled:bg-gray-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-[#5e52ff]/20">
+                                                        {isBatchMode ? (activeItem?.status === 'saved' ? 'Update & Next' : 'Save & Next') : 'Add Contact'}
                                                     </button>
                                                 </div>
                                             </form>
