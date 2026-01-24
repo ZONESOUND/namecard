@@ -122,12 +122,21 @@ export async function enrichSingleContactAction(id) {
            - **Fallback Strategy (CRITICAL)**: If you do NOT know the person, you **MUST** describe the **Organization's significance** and the **Role's responsibilities** instead. 
            - **Style**: Professional, objective, Traditional Chinese context.
 
-        3. **TAGGING (New)**:
-           - Assign 3-5 relevant tags.
-           - **MANDATORY**: Identify the **Country/Region** (e.g. "Taiwan", "Japan", "USA", "Germany", "Switzerland", "Hong Kong", "China") and add it as a tag.
-           - **PRIORITY**: REUSE "Existing System Tags" if they fit (e.g. "Tech", "Art", "Music", "Curator").
-           - If no existing tag fits, create a NEW concise tag (e.g. "Semiconductors", "Government", "VC").
-           - Tags should be English or Traditional Chinese (consistent with existing).
+        3. **TAGGING (Strict Taxonomy)**:
+           - You MUST classify the contact using the following specific categories if applicable:
+             - **Organization**: `Venue` (場館/中心/美術館), `Foundation` (基金會), `Government` (政府單位), `Gallery` (畫廊), `Festival` (藝術節), `Company` (公司), `University` (學校/學術).
+             - **Role**: `Curator` (策展人), `Director` (總監/館長), `Producer` (製作人), `Artist` (藝術家), `Critic` (評論).
+             - **Field**: `Performing Arts` (表演藝術), `Visual Arts` (視覺藝術), `New Media` (新媒體), `Music` (音樂), `Tech` (科技), `Film` (電影).
+             - **Region**: `Taiwan`, `Japan`, `USA`, `Germany`, `Switzerland`, `Hong Kong`, `China`, `UK`.
+           
+           - **Rules**:
+             - Assign 4-6 tags total.
+             - **PRIORITY 1**: Always tag the **Region**.
+             - **PRIORITY 2**: Always tag the **Organization Type** (e.g. if they work at a Museum, tag "Venue").
+             - **PRIORITY 3**: Always tag the **Role** (e.g. "Curator").
+             - **DO NOT** use generic tags like "Professional", "Business", "Creative", "Work".
+             - Use Traditional Chinese for the Role/Org tags if the input is Chinese, otherwise English. Keep Regions in English.
+             - Re-use existing system tags if they match these categories.
 
         4. **OUTPUT**:
            - Return JSON.
