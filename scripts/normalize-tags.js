@@ -20,41 +20,88 @@ const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 // Define Tag Mapping Rules (Source -> Target)
 // Target should be the "Canonical" tag.
 const TAG_MAPPING = {
-    // Education
+    // --- VENUES & INSTITUTIONS ---
+    "Museum": "Museum",
+    "博物館": "Museum",
+    "美術館": "Art Museum",
+    "Art Venue": "Art Venue",
+    "Art Center": "Art Center",
+    "藝術中心": "Art Center",
+    "Festival": "Festival",
+    "藝術節": "Festival",
+    "Gallery": "Gallery",
+    "畫廊": "Gallery",
+    "C-LAB": "C-LAB",
+    "C-lab": "C-LAB",
+    "臺灣當代文化實驗場": "C-LAB",
+    "IRCAM": "IRCAM",
+    "Ircam": "IRCAM",
+    "Taicc": "TAICCA",
+    "TAICCA": "TAICCA",
+    "文策院": "TAICCA",
+    "文化內容策進院": "TAICCA",
+    "北藝中心": "TPAC",
+    "TPAC": "TPAC",
+    "兩廳院": "NTCH",
+    "NTCH": "NTCH",
+    "衛武營": "Weiwuying",
+    "歌劇院": "NTT",
+
+    // --- ROLES ---
+    "Curator": "Curator",
+    "策展人": "Curator",
+    "策展": "Curator",
+    "Director": "Director",
+    "總監": "Director",
+    "Admin": "Administration",
+    "Administrator": "Administration",
+    "行政": "Administration",
+    "Producer": "Producer",
+    "製作人": "Producer",
+    "Artist": "Artist",
+    "藝術家": "Artist",
+
+    // --- SECTORS ---
     "教育": "Education",
     "Higher Education": "Education",
     "大學": "University",
-    "Academic": "Education",
-    "Academia": "Education",
-
-    // Tech
+    "University": "University",
+    "Academic": "Academia",
     "科技": "Tech",
     "Technology": "Tech",
-    "AI": "Artificial Intelligence",
-
-    // Art & Culture
+    "AI": "AI",
+    "Artificial Intelligence": "AI",
     "藝術": "Art",
     "Arts": "Art",
-    "Culture": "Culture",
-    "Cultural": "Culture",
-    "文化": "Culture",
-    "策展": "Curator",
-    "Curating": "Curator",
-    "Music": "Music",
     "音樂": "Music",
+    "Music": "Music",
+    "Sound Art": "Sound Art",
+    "聲音藝術": "Sound Art",
+    "New Media": "New Media",
+    "新媒體": "New Media",
+    "Government": "Government",
+    "公部門": "Government",
 
-    // Business
-    "Management": "Management",
-    "管理": "Management",
-    "Business": "Business",
-    "Marketing": "Marketing",
-    "行銷": "Marketing",
-
-    // Roles
+    // --- BUSINESS ---
     "CEO": "Executive",
     "Founder": "Founder",
-    "Manager": "Management"
+    "Manager": "Management",
+    "管理": "Management",
+    "行銷": "Marketing"
 };
+
+// Helper: Convert to Title Case (Pascal Case-like for tags)
+// e.g. "higher education" -> "Higher Education", "art" -> "Art"
+function toTitleCase(str) {
+    // Handle special acronyms
+    if (["AI", "VR", "XR", "CEO", "CTO", "CFO", "MBA", "PHD", "USA", "UK", "EU"].includes(str.toUpperCase())) {
+        return str.toUpperCase();
+    }
+    return str.replace(
+        /\w\S*/g,
+        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+    );
+}
 
 async function run() {
     console.log("🚀 Starting Tag Normalization...");
@@ -79,12 +126,13 @@ async function run() {
                 // Check exact match in mapping
                 if (TAG_MAPPING[t]) {
                     newTagsSet.add(TAG_MAPPING[t]);
+                } else if (TAG_MAPPING[t.toLowerCase()]) { // Check normalized source key? No, mapping keys are source.
+                    // Actually, keys in mapping are mixed.
+                    // Let's just normalize 't' to Title Case if not mapped.
+                    newTagsSet.add(toTitleCase(t));
                 } else {
-                    // Check case-insensitive
-                    const lower = t.toLowerCase();
-                    // Simple normalization: Title Case
-                    // const normalized = t.charAt(0).toUpperCase() + t.slice(1);
-                    newTagsSet.add(t);
+                    // Normalize to Title Case
+                    newTagsSet.add(toTitleCase(t));
                 }
             }
 
