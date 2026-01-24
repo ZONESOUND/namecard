@@ -80,10 +80,21 @@ async function run() {
             const others = group.slice(1);
 
             // Merge valuable data form older records
+            // Merge valuable data form older records
             for (const other of others) {
-                duplicates.push(other); // Add this line back!
+                duplicates.push(other);
                 duplicatesCount++;
                 console.log(`   ❌ Marking as duplicate: ${other.name} (ID: ${other.id})`);
+
+                // 1. Name Enrichment (If older record has better name, e.g. "Name (EnName)")
+                // Check if other name has parens and survivor doesn't, or if other name is significantly longer
+                const otherHasEng = /[a-zA-Z]/.test(other.name);
+                const survivorHasEng = /[a-zA-Z]/.test(survivor.name);
+
+                if (otherHasEng && !survivorHasEng) {
+                    console.log(`     -> Updating name to richer version: ${other.name}`);
+                    survivor.name = other.name;
+                }
 
                 if (!survivor.imageUrl && other.imageUrl) survivor.imageUrl = other.imageUrl;
                 if (!survivor.notes && other.notes) survivor.notes = other.notes;
