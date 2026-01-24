@@ -49,17 +49,56 @@ export default function AddContactForm({ availableTags = [] }) {
         }
     };
 
+    const compressImage = async (file) => {
+        // Simple client-side compression to avoid massive uploads
+        // Return original if small enough
+        if (file.size < 1024 * 1024) return file; // < 1MB
+
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Max dimension 2000px
+                const MAX_DIM = 2000;
+                if (width > MAX_DIM || height > MAX_DIM) {
+                    if (width > height) {
+                        height *= MAX_DIM / width;
+                        width = MAX_DIM;
+                    } else {
+                        width *= MAX_DIM / height;
+                        height = MAX_DIM;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                }, 'image/jpeg', 0.8); // 80% quality JPEG
+            };
+        });
+    };
+
     const processItem = async (item) => {
         updateItemStatus(item.id, 'parsing');
 
-        const formData = new FormData();
-        formData.append('file', item.file);
-
         try {
+            const compressedFile = await compressImage(item.file);
+            const formData = new FormData();
+            formData.append('file', compressedFile);
+
             const res = await fetch('/api/parse-card', {
                 method: 'POST',
                 body: formData,
             });
+            // ... rest of the function ...
 
             if (!res.ok) throw new Error('OCR Failed');
 
@@ -109,6 +148,10 @@ export default function AddContactForm({ availableTags = [] }) {
             formData.set('aiSummary', activeItem.data.aiSummary);
         }
 
+        if (activeItem.data?.imageUrl) {
+            formData.set('imageUrl', activeItem.data.imageUrl);
+        }
+
         let duplicateId = activeItem.duplicate?.id;
         if (!duplicateId) {
             const dataToTest = {
@@ -137,7 +180,8 @@ export default function AddContactForm({ availableTags = [] }) {
             tags: formData.get('tags')?.split(',').map(s => s.trim()).filter(Boolean) || [],
             metAt: formData.get('metAt') || activeItem.data?.metAt,
             notes: formData.get('notes') || activeItem.data?.notes,
-            aiSummary: formData.get('aiSummary') || activeItem.data?.aiSummary
+            aiSummary: formData.get('aiSummary') || activeItem.data?.aiSummary,
+            imageUrl: activeItem.data?.imageUrl // Pass the image URL!
         };
 
         await addContactAction(formData);

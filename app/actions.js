@@ -26,6 +26,7 @@ export async function addContactAction(formData) {
         tags,
         jobStatus: formData.get('jobStatus'),
         id: formData.get('id'),
+        imageUrl: formData.get('imageUrl'), // Capture Image URL
     };
 
     await saveContact(rawFormData);
