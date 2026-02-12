@@ -5,13 +5,16 @@ title: "Head (主管)"
 company: "Pro Helvetia Shanghai, Swiss Arts Council"
 email: "yuxi.lu@prohelvetia.cn"
 phone: "+86 21 62700365 / 62700366"
-tags: ["藝術文化", "瑞士藝術委員會", "Pro Helvetia", "國際關係", "文化交流"]
+tags: ["藝術文化", "瑞士", "Pro Helvetia", "國際關係", "文化交流", "Switzerland"]
 met_at: ""
 added_at: "2026-01-22T07:33:23.738Z"
+image_url: ""
 importance_score: 0
 ---
 
 # Lucy Yuxi Lu 魯昱熙
+
+
 
 **Head (主管)** @ Pro Helvetia Shanghai, Swiss Arts Council
 

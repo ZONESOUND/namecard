@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-No summary generated yet.
+孫立群目前擔任文化部科長，專注於推動政府文化政策和計畫。作為文化部的一部分，該單位的主要職責為制定及執行文化事務相關政策，促進文化資源的保存及利用。對於文化產業發展有深刻理解，孫立群積極參與政府及相關機構之協調工作。聯絡方式為電子郵件：slc@moc.gov.tw。
 
 ## Notes
 

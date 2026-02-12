@@ -389,19 +389,20 @@
     "email": "yuxi.lu@prohelvetia.cn",
     "phone": "+86 21 62700365 / 62700366",
     "metAt": "",
-    "notes": "",
+    "notes": null,
     "tags": [
       "藝術文化",
-      "瑞士藝術委員會",
+      "瑞士",
       "Pro Helvetia",
       "國際關係",
-      "文化交流"
+      "文化交流",
+      "Switzerland"
     ],
     "jobStatus": null,
     "id": "1dae20a9-48b9-40ad-827f-27a73b4b5d09",
     "history": [],
     "addedAt": "2026-01-22T07:33:23.738Z",
-    "updatedAt": "2026-01-22T08:22:03.773Z",
+    "updatedAt": "2026-01-24T10:25:35.777Z",
     "aiSummary": "魯昱熙女士現任瑞士文化基金會上海辦公室的主管，是促進中瑞文化交流的重要人物。瑞士文化基金會致力於推動瑞士藝術與文化在全球的推廣，特別是在中國的影響力。魯女士在文化管理和國際合作方面擁有豐富的經驗，為瑞中兩國搭建了許多文化橋梁，促進了雙方的藝術和文化交流。她的工作不僅提升了瑞士藝術在中國的知名度，還對全球文化交流做出了積極貢獻。"
   },
   {
@@ -443,8 +444,8 @@
     "id": "fc557ef1-6c25-407d-8e4b-2deea7458483",
     "history": [],
     "addedAt": "2026-01-22T07:43:47.693Z",
-    "updatedAt": "2026-01-24T05:56:47.424Z",
-    "aiSummary": "郭文華目前擔任國立陽明交通大學副館長，專注於圖書館管理及學術資源的提供，致力於支持學術界的研究需求與資訊共享。他的專業領域為科技與社會（STS），透過強化校內資源的整合與推廣，為學術社區提供有效的學習與研究支持。任何相關學術支持與合作需求，請隨時聯繫 whkuo@nycu.edu.tw。"
+    "updatedAt": "2026-01-24T09:55:48.344Z",
+    "aiSummary": "郭文華先生現任國立陽明交通大學副館長，專注於科學、技術與社會(STS)領域的研究與發展。作為副館長，他負責協助圖書館的管理與運營，支持學術資源的有效利用及知識傳播。您可以透過電子郵件聯絡他：whkuo@nycu.edu.tw。"
   },
   {
     "name": "葉姿儀 (Tzu Yi Yeh)",
@@ -988,7 +989,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:17:18.038Z",
-    "updatedAt": "2026-01-24T06:17:18.038Z"
+    "updatedAt": "2026-01-24T09:55:52.089Z",
+    "aiSummary": "Swamp Land 沼澤之地是一家公司，專注於提供與沼澤地相關的服務或產品。對具體領域或專長的詳細資訊有限。聯繫方式為mailwithswampland@gmail.com。"
   },
   {
     "name": "Swamp Land 沼澤之地",
@@ -1006,7 +1008,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:17:39.937Z",
-    "updatedAt": "2026-01-24T06:17:39.937Z"
+    "updatedAt": "2026-01-24T09:55:56.621Z",
+    "aiSummary": "Swamp Land 沼澤之地是一家專注於其專業領域的公司，提供特定需求的解決方案與服務。主旨在於根據客戶需求提供有效的資源管理及支持。相關聯絡人包括已知的專家：郭文華，該人是國立陽明交通大學的副館長，專長於科技與社會研究（STS）。如需更多資訊，請聯繫電子郵件地址 withswampland@gmail.com。"
   },
   {
     "name": "張祐瑄",
@@ -1016,13 +1019,21 @@
     "phone": "34-91-5798177",
     "metAt": null,
     "notes": "",
-    "tags": [],
+    "tags": [
+      "Government",
+      "Taiwan",
+      "Culture",
+      "Spain",
+      "外交",
+      "Diplomacy"
+    ],
     "jobStatus": null,
     "id": "3aba3e3a-c202-4b2f-bc5e-5fbcee3873fe",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:17:56.546Z",
-    "updatedAt": "2026-01-24T06:17:56.547Z"
+    "updatedAt": "2026-01-26T01:45:29.244Z",
+    "aiSummary": "張祐瑄在中華民國駐西班牙代表處擔任文化組組長，負責推動中華民國與西班牙之間的文化交流，組織和策劃各種文化活動，以提升台灣的國際文化影響力。該代表處作為台灣的駐外機構，具有促進雙邊文化合作的作用和促進台灣文化、藝術和價值觀國際化的責任。"
   },
   {
     "name": "孫立群 (Ashley Sun)",
@@ -1038,7 +1049,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:18:01.357Z",
-    "updatedAt": "2026-01-24T06:18:01.357Z"
+    "updatedAt": "2026-01-24T09:56:04.734Z",
+    "aiSummary": "孫立群目前擔任文化部科長，專注於推動政府文化政策和計畫。作為文化部的一部分，該單位的主要職責為制定及執行文化事務相關政策，促進文化資源的保存及利用。對於文化產業發展有深刻理解，孫立群積極參與政府及相關機構之協調工作。聯絡方式為電子郵件：slc@moc.gov.tw。"
   },
   {
     "name": "林郁庭",
@@ -1054,7 +1066,8 @@
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:18:07.263Z",
-    "updatedAt": "2026-01-24T06:18:07.263Z"
+    "updatedAt": "2026-01-24T09:56:08.030Z",
+    "aiSummary": "林郁庭現任台南應用科技大學美術系副教授，擁有豐富的教學經驗。該大學專注於應用科技和藝術領域的教育與研究，致力於培養學生的專業技能。電子郵件聯絡方式為lt0200@gm.tut.edu.tw。此外，台灣國立陽明交通大學圖書館副館長郭文華專長於科學、技術與社會研究，其聯絡方式為whkuo@nycu.edu.tw。"
   },
   {
     "name": "萬志軒 (Chih Hsuan Wan)",
@@ -1104,17 +1117,23 @@
     "name": "黃本婷 (Pen-Ting Huang)",
     "title": "Manager, Arts Education Department (藝術教育部經理)",
     "company": "國家歌劇院",
-    "email": "pthuang@npac-ntt.org",
+    "email": "pth@npac-ntt.org",
     "phone": "+886-4-241531760",
-    "metAt": null,
-    "notes": "",
-    "tags": [],
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Performing Arts",
+      "Culture",
+      "Education",
+      "Venue"
+    ],
     "jobStatus": null,
     "id": "8b58db84-a954-4b17-aaa8-b8ae08765481",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:20:18.028Z",
-    "updatedAt": "2026-01-24T06:20:18.028Z"
+    "updatedAt": "2026-01-24T10:28:52.999Z",
+    "aiSummary": "國家兩廳院是台灣重要的文化藝術機構之一，致力於推動國內外的表演藝術活動。擔任藝術教育部經理的角色，黃本婷女士負責策劃和管理藝術相關的教育專案，促進大眾對於文化藝術的參與和欣賞。該角色需要深厚的藝術背景及管理能力，以確保教育計畫的成功實施並達到社會效益。"
   },
   {
     "name": "Karen Yu 余林穗",
@@ -1139,19 +1158,278 @@
     "aiSummary": "CMHK 現在音樂是一家專注於表演藝術和音樂文化推廣的組織，致力於通過創新和多樣的藝術呈現形式來促進文化交流和發展。作為藝術總監，Karen Yu 負責制定藝術計畫和指導創意方向，以促進音響設備項目和文化活動。她的職責包括策劃展覽、音樂會及其他文化活動，以及與藝術家和合作夥伴協同合作，確保項目的成功推行。該角色需具備出色的領導和藝術敏感度，並能有效地在藝術和其相關技術領域之間橋接。"
   },
   {
-    "name": "張可芳 (Ke-Fang Chang)",
+    "name": "張可芳",
     "title": "Director (主任)",
     "company": "臺中市信義國小",
     "email": "kefang852004@gmail.com",
     "phone": "0918-095-151",
-    "metAt": null,
-    "notes": "",
-    "tags": [],
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Taiwan",
+      "Education",
+      "School"
+    ],
     "jobStatus": null,
     "id": "6fc34bc7-9a63-42b6-9080-2554f4a144a0",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T06:21:00.018Z",
-    "updatedAt": "2026-01-24T06:21:02.711Z"
+    "updatedAt": "2026-01-24T10:29:22.517Z",
+    "aiSummary": "張可芳目前擔任臺中市信義國小的主任。該機構為臺灣重要的教育機構之一，致力於提供優質的小學教育。作為主任，張可芳負責學校的行政管理和學術發展，確保學校運營的順利和教學質量的提升。此角色要求具有優秀的領導能力及在教育政策上的深厚知識背景。"
+  },
+  {
+    "name": "彭桂技",
+    "title": "理事長",
+    "company": "社團法人台灣乾淨水守護聯盟",
+    "email": "sandyperng@gmail.com",
+    "phone": "093798942",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Taiwan",
+      "社團法人",
+      "環保",
+      "NGO"
+    ],
+    "jobStatus": null,
+    "id": "ca015320-a800-47fe-911e-10cca50fd2eb",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:03:39.028Z",
+    "updatedAt": "2026-01-26T02:03:39.028Z"
+  },
+  {
+    "name": "鄭開來 (Kyle Zheng)",
+    "title": "作家、歌手、主持人",
+    "company": "中廣 i正點",
+    "email": "kyle1267k@gmail.com",
+    "phone": "0931-246-161",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Podcast",
+      "音樂",
+      "媒體",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "1e9e3f77-3b3f-4dcc-a0f9-41db7d6c7e27",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:03:51.005Z",
+    "updatedAt": "2026-01-26T02:04:40.583Z"
+  },
+  {
+    "name": "張苡庭 (Tracy Chang)",
+    "title": "Director (理事長)",
+    "company": "台灣相信世代發展協會",
+    "email": "tracychang928@gmail.com",
+    "phone": "+886 933 163 815",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Taiwan",
+      "Director",
+      "Non-Profit"
+    ],
+    "jobStatus": null,
+    "id": "81899a19-242e-4a59-bdd8-bdffe76b4009",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:05:10.994Z",
+    "updatedAt": "2026-01-26T02:05:10.994Z"
+  },
+  {
+    "name": "王健旺",
+    "title": "校長",
+    "company": "新北市新莊區民安國民小學",
+    "email": "jangwang1226@gmail.com",
+    "phone": "0937050685",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "教育",
+      "新北市",
+      "Bilingual Education",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "3381b239-36ff-48fd-9c28-ca683f592b42",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:05:21.556Z",
+    "updatedAt": "2026-01-26T02:05:21.556Z"
+  },
+  {
+    "name": "陳恆佑",
+    "title": "特聘教授",
+    "company": "國立暨南國際大學",
+    "email": "hychen@ncnu.edu.tw",
+    "phone": "049-2910960",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "國立暨南國際大學",
+      "特聘教授",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "4dbf19e3-105f-4b19-b146-dec29cbe050e",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:05:25.338Z",
+    "updatedAt": "2026-01-26T02:05:25.338Z"
+  },
+  {
+    "name": "郭嘉真",
+    "title": "視覺化與圖形技術組 研究員兼組長",
+    "company": "國家實驗研究院 國家高速網路與計算中心",
+    "email": "cckuo@narlabs.org.tw",
+    "phone": "03-5776085#350",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "NARLabs",
+      "科技",
+      "研究",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "32d21870-9296-44ac-b046-63f1c1dff472",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:05:28.487Z",
+    "updatedAt": "2026-01-26T02:05:28.487Z"
+  },
+  {
+    "name": "曾筱如",
+    "title": "執行編輯",
+    "company": "藝術家雜誌",
+    "email": "artvenue@seed.net.tw",
+    "phone": "02-23886715, 0903-697037",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "藝術",
+      "編輯",
+      "公司",
+      "Taiwan",
+      "Media"
+    ],
+    "jobStatus": null,
+    "id": "bb736359-1bf4-4d14-8d2b-63751115437d",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:14:59.371Z",
+    "updatedAt": "2026-01-26T03:20:00.360Z",
+    "aiSummary": "曾筱如擔任藝術家雜誌的執行編輯，負責策劃與編輯內容，確保出版物內容的質量和創新。『藝術家』是台灣重要的文化和藝術媒體，致力於推廣和報導本地及國際藝術活動，為藝術家提供發聲的平台。作為執行編輯，曾筱如需合作管理編輯團隊，策劃專題報導，組織訪談和學術研討，維持雜誌的編輯方針和目標，推動藝術文化更廣泛傳播。"
+  },
+  {
+    "name": "劉怡妏 (Lyla Liu)",
+    "title": "Reporter (記者)",
+    "company": "台灣英文新聞股份有限公司",
+    "email": "lliu@etaiwannews.com",
+    "phone": "+886-939700982",
+    "metAt": "",
+    "notes": null,
+    "tags": [
+      "Taiwan",
+      "Journalism",
+      "Media"
+    ],
+    "jobStatus": null,
+    "id": "c71cfa79-1d89-4421-a6be-0caa8a3c96ba",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:15:03.698Z",
+    "updatedAt": "2026-01-26T02:31:41.730Z",
+    "aiSummary": "劉怡妏女士目前擔任《台灣英文新聞股份有限公司》的記者，這是一家專注於英文媒體的新聞機構，主要提供台灣及國際相關時事新聞報導。記者的職責通常包括調查、撰寫並編輯新聞報導，旨在為讀者提供準確且及時的信息。此外，她所在的公司具有重要的文化傳播職能，尤其在連結台灣與國際上對台灣事務的了解方面發揮顯著作用。"
+  },
+  {
+    "name": "洪裕鈞",
+    "title": "董事長",
+    "company": "洪建全基金會",
+    "email": "royce@ipevo.com",
+    "phone": "",
+    "metAt": "2023 台灣STS年會展覽贊助",
+    "notes": null,
+    "tags": [
+      "科技",
+      "公司",
+      "台灣"
+    ],
+    "jobStatus": null,
+    "id": "bbde4db8-039f-4eb8-90cd-fccc20a76252",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:15:07.470Z",
+    "updatedAt": "2026-01-26T02:18:20.711Z",
+    "aiSummary": "洪裕鈞是愛比科技的董事長，愛比科技是一家專注於音響技術和創意科技的公司。作為董事長，洪裕鈞的職責包括制定公司的長期戰略、確保公司業務的可持續發展以及提升市場競爭力。公司在音響設備領域具有領先地位，並與相關政府機構及文化藝術組織有緊密合作，對推動台灣的科技文化發展具有重要意義。"
+  },
+  {
+    "name": "黃于倫",
+    "title": "產業服務及資訊部/產業培訓及推廣組",
+    "company": "紡織產業綜合研究所",
+    "email": "ylhuang@ttri.org.tw",
+    "phone": "(02)2267-0321 分機: 8501",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "紡織產業",
+      "研究機構",
+      "Taiwan"
+    ],
+    "jobStatus": null,
+    "id": "9b478d5b-8bd7-4143-93c6-10deadb3be8c",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:15:10.949Z",
+    "updatedAt": "2026-01-26T02:15:10.949Z"
+  },
+  {
+    "name": "李名揚",
+    "title": "媒體事務聯絡人",
+    "company": "國家實驗研究院",
+    "email": "tomlee@narlabs.org.tw",
+    "phone": "02-6630-0622",
+    "metAt": "2024 國科會《匯聚》展覽",
+    "notes": null,
+    "tags": [
+      "National Applied Research Laboratories",
+      "媒體聯絡",
+      "Taiwan",
+      "NSTC"
+    ],
+    "jobStatus": null,
+    "id": "d7b916a4-301d-4900-af1d-8c0b2333151e",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:15:14.725Z",
+    "updatedAt": "2026-01-26T02:17:12.037Z",
+    "aiSummary": "國家實驗研究院是一個在台灣設立的重要研究機構，旨在促進科學技術的創新與發展。作為媒體事務聯絡人，李名揚先生負責管理和協調媒體關係、籌劃傳播策略以及分析媒體曝光和公共關注度，以支持研究院的公共形象和宣傳科技成果。國家實驗研究院在台灣的政府和科技發展中扮演著關鍵角色，積極支持國家級的研究計畫和科技創新。"
+  },
+  {
+    "name": "張淑征 (Grace Cheung)",
+    "title": "Vice Chairman, Executive Director",
+    "company": "洪建全基金會",
+    "email": "grace@hongfoundation.org.tw",
+    "phone": "",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "基金會",
+      "Taiwan",
+      "Philanthropy",
+      "文化基金會",
+      "非營利組織",
+      "藝術文化"
+    ],
+    "jobStatus": null,
+    "id": "5ed453b7-e0a3-4a6e-8b86-ee8433a75e56",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-01-26T02:16:17.720Z",
+    "updatedAt": "2026-01-26T02:16:17.720Z"
   }
 ]

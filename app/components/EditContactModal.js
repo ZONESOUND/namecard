@@ -1,14 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { updateContactAction, enrichSingleContactAction } from '../actions';
-import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2 } from 'lucide-react';
+import { updateContactAction, enrichSingleContactAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
+import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 export default function EditContactModal({ contact, isOpen, onClose, availableTags = [] }) {
     const [tagQuery, setTagQuery] = useState('');
     const [isEnriching, setIsEnriching] = useState(false);
+    const [isTagging, setIsTagging] = useState(false);
+    const [isSmartUpdating, setIsSmartUpdating] = useState(false);
+    const [smartInstruction, setSmartInstruction] = useState('');
+    const [showAgent, setShowAgent] = useState(true); // Default to open
     const formRef = useRef(null);
     const tagsInputRef = useRef(null);
     const router = useRouter();
@@ -52,6 +56,57 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
             alert('Error during enrichment');
         } finally {
             setIsEnriching(false);
+        }
+    };
+
+    const handleAiTags = async () => {
+        setIsTagging(true);
+        try {
+            const formData = new FormData(formRef.current);
+            const contactData = {
+                name: formData.get('name'),
+                title: formData.get('title'),
+                company: formData.get('company'),
+                notes: formData.get('aiSummary') || contact.aiSummary,
+            };
+
+            const res = await generateTagsAction(contactData);
+            if (res.success && res.tags) {
+                const currentVal = tagsInputRef.current.value;
+                const currentTags = currentVal.split(',').map(s => s.trim()).filter(Boolean);
+                const uniqueTags = new Set([...currentTags, ...res.tags]);
+
+                tagsInputRef.current.value = Array.from(uniqueTags).join(', ');
+                alert(`Generated tags: ${res.tags.join(', ')}`);
+            } else {
+                alert('Tag generation failed: ' + (res.error || 'Unknown error'));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error generating tags');
+        } finally {
+            setIsTagging(false);
+        }
+    };
+
+    const handleSmartUpdate = async () => {
+        if (!smartInstruction.trim()) return;
+        setIsSmartUpdating(true);
+        try {
+            const res = await aiSmartUpdateAction(contact.id, smartInstruction);
+            if (res.success) {
+                alert('Contact updated successfully!');
+                // Refresh local inputs or close?
+                // Since it saved to server, we should probably just reload to see changes or update locally.
+                // Simplest is to reload the page to fetch fresh data including history.
+                window.location.reload();
+            } else {
+                alert('Update failed: ' + res.error);
+            }
+        } catch (e) {
+            alert('Error updating contact');
+        } finally {
+            setIsSmartUpdating(false);
         }
     };
 
@@ -125,6 +180,34 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                 </button>
                             </div>
 
+                            {/* AI AGENT BAR (Fixed Location) */}
+                            <div className="shrink-0 max-h-40 bg-[#13151b] border-b border-white/5 p-4 z-20">
+                                <div className="bg-[#5e52ff]/10 border border-[#5e52ff]/20 rounded-xl p-3 flex flex-col gap-2">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest flex items-center gap-2">
+                                            <Bot size={14} /> AI Assistant
+                                        </h3>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <input
+                                            value={smartInstruction}
+                                            onChange={(e) => setSmartInstruction(e.target.value)}
+                                            placeholder="Ask to update, fix, or search..."
+                                            className="flex-1 bg-[#0b0c10] border border-white/10 rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-[#5e52ff]"
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSmartUpdate()}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleSmartUpdate}
+                                            disabled={isSmartUpdating || !smartInstruction}
+                                            className="bg-[#5e52ff] hover:bg-[#4b3ff0] text-white px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[40px]"
+                                        >
+                                            {isSmartUpdating ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Scrollable Form Content */}
                             <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10">
                                 <form id="edit-form" ref={formRef} action={async (formData) => {
@@ -184,7 +267,18 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
 
                                     {/* Tags */}
                                     <div className="space-y-5 mt-8">
-                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 border-l-2 border-[#5e52ff]">Tags</p>
+                                        <div className="flex items-center justify-between ml-1">
+                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 border-l-2 border-[#5e52ff]">Tags</p>
+                                            <button
+                                                type="button"
+                                                onClick={handleAiTags}
+                                                disabled={isTagging}
+                                                className="flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-full transition-all font-bold border border-[#5e52ff]/20 cursor-pointer pointer-events-auto"
+                                            >
+                                                {isTagging ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                                                {isTagging ? 'Generating...' : 'AI Tags'}
+                                            </button>
+                                        </div>
                                         <div className="relative group">
                                             <Tag size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
                                             <input
@@ -193,11 +287,12 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                                 defaultValue={contact.tags?.join(', ')}
                                                 onChange={(e) => {
                                                     const val = e.target.value;
-                                                    const parts = val.split(',').map(p => p.trim());
-                                                    setTagQuery(parts[parts.length - 1]);
+                                                    // Don't auto-trim here to allow typing spaces, just split naturally
+                                                    const parts = val.split(',');
+                                                    setTagQuery(parts[parts.length - 1].trim());
                                                 }}
                                                 placeholder="Tags (comma separated)..."
-                                                className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all font-mono text-sm tracking-wide"
                                             />
                                         </div>
                                         <div className="flex flex-wrap gap-2 px-1 min-h-[28px]">

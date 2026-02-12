@@ -5,7 +5,7 @@ title: "Associate University Librarian (副館長)"
 company: "國立陽明交通大學 (NYCU)"
 email: "whkuo@nycu.edu.tw"
 phone: "+886-2-28267012"
-tags: ["圖書館", "教育", "Taiwan"]
+tags: ["圖書館", "Education", "Taiwan"]
 met_at: ""
 added_at: "2026-01-22T07:43:47.693Z"
 image_url: ""
@@ -28,7 +28,7 @@ importance_score: 0
 - Address: N/A
 
 ## AI Summary
-郭文華目前擔任國立陽明交通大學副館長，專注於圖書館管理及學術資源的提供，致力於支持學術界的研究需求與資訊共享。他的專業領域為科技與社會（STS），透過強化校內資源的整合與推廣，為學術社區提供有效的學習與研究支持。任何相關學術支持與合作需求，請隨時聯繫 whkuo@nycu.edu.tw。
+郭文華先生現任國立陽明交通大學副館長，專注於科學、技術與社會(STS)領域的研究與發展。作為副館長，他負責協助圖書館的管理與運營，支持學術資源的有效利用及知識傳播。您可以透過電子郵件聯絡他：whkuo@nycu.edu.tw。
 
 ## Notes
 

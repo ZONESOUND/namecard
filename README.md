@@ -10,6 +10,65 @@ A dual-mode (Local + Cloud) contact management system with AI enrichment, design
     *   **Cloud**: Synced with **Cloudflare R2** for web access.
 *   **Secure Access**: Password-protected login. (密碼保護)
 
+---
+
+## 🚀 Operation Guide | 操作指南
+
+### 1. Data Synchronization | 資料同步
+
+**Important**: Always pull the latest data before making changes.
+**重要**: 修改資料前，請務必確認已下載最新版本。
+
+```bash
+# Download latest contacts and images from Cloudflare R2
+# 從 Cloudflare R2 下載最新的聯絡人與圖片
+npm run pull
+```
+
+### 2. Export for Mailchimp | 匯出至 Mailchimp
+
+Generate a CSV file optimized for Mailchimp import (UTF-8 BOM included).
+產生專為 Mailchimp 優化的 CSV 檔案（包含 UTF-8 BOM 格式，Excel 可正常開啟）。
+
+```bash
+npm run export
+```
+*   **Output**: `data/mailchimp-export.csv`
+*   **Import Mapping (匯入對應)**:
+    *   **Email Address** -> Email
+    *   **Full Name** -> First Name (or Custom Field)
+    *   **Company** -> Company
+    *   **Tags** -> Tags
+
+### 3. Data Maintenance | 資料維護
+
+```bash
+# Merge duplicate contacts
+# 合併重複的聯絡人資料
+npm run dedup
+
+# Cleanup orphaned files (images/markdown without JSON entry)
+# 清理孤兒檔案（沒有對應資料的圖片或 Markdown）
+npm run cleanup
+
+# Standardize tags
+# 統一標籤格式
+npm run normalize-tags
+```
+
+### 4. AI Enrichment | AI 資料補全
+
+Use AI to generate summaries and automatically tag contacts.
+使用 AI 產生簡介並自動為聯絡人加上標籤。
+
+```bash
+npm run enrich
+```
+*   **Enrichment**: Generates a professional summary in Traditional Chinese. (產生繁體中文專業簡介)
+*   **Auto Tagging**: Suggests up to 5 relevant tags based on the person's background. (根據背景自動建議 5 個相關標籤)
+
+---
+
 ## Deployment | 部署 (Zeabur)
 
 1.  Push code to GitHub.
@@ -37,4 +96,3 @@ npm install
 npm run dev
 # Open http://localhost:3000
 ```
-

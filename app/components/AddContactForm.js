@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { addContactAction, checkDuplicateAction, enrichDraftAction } from '../actions';
-import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft, RefreshCw } from 'lucide-react';
+import { addContactAction, checkDuplicateAction, enrichDraftAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
+import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft, RefreshCw, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AddContactForm({ availableTags = [] }) {
@@ -138,6 +138,9 @@ export default function AddContactForm({ availableTags = [] }) {
 
     const [isSaving, setIsSaving] = useState(false);
     const [isEnriching, setIsEnriching] = useState(false);
+    const [isTagging, setIsTagging] = useState(false);
+    const [isSmartUpdating, setIsSmartUpdating] = useState(false);
+    const [smartInstruction, setSmartInstruction] = useState('');
 
     const handleDraftEnrich = async () => {
         if (isEnriching || !activeId) return;
@@ -187,6 +190,91 @@ export default function AddContactForm({ availableTags = [] }) {
             alert("Error running AI enrichment.");
         } finally {
             setIsEnriching(false);
+        }
+    };
+
+    const handleAiTags = async () => {
+        if (!activeId || isTagging) return;
+        setIsTagging(true);
+
+        const activeItem = queue.find(i => i.id === activeId);
+
+        try {
+            const contactData = {
+                name: displayData.name,
+                title: displayData.title,
+                company: displayData.company,
+                notes: displayData.notes || displayData.aiSummary
+            };
+
+            const res = await generateTagsAction(contactData);
+
+            if (res.success && res.tags) {
+                const currentTags = displayData.tags || [];
+                const uniqueTags = new Set([...currentTags, ...res.tags]);
+                const newTagsArray = Array.from(uniqueTags);
+
+                updateItemStatus(activeId, activeItem.status, {
+                    data: { ...displayData, tags: newTagsArray }
+                });
+
+                alert(`Generated tags: ${res.tags.join(', ')}`);
+            } else {
+                alert('Tag generation failed: ' + (res.error || 'Unknown'));
+            }
+
+        } catch (e) {
+            console.error(e);
+            alert('Error generating tags');
+        } finally {
+            setIsTagging(false);
+        }
+    };
+
+    const handleSmartUpdate = async () => {
+        // In Batch/Add mode, "Smart Update" is tricky because the record might not exist on server yet.
+        // If it's an existing contact (duplicate found), we can use the ID.
+        // If it's a NEW draft, we should just use AI to parse the instruction and update local state `displayData`.
+
+        if (!smartInstruction.trim()) return;
+        setIsSmartUpdating(true);
+
+        try {
+            // Check if we are editing an EXISTING record (duplicate) or just a draft
+            // If duplicate, we have an ID maybe? `activeItem.duplicate?.id`
+            // But usually Add Form is for creating new.
+            // Let's implement a "Draft Smart Update" which is purely client-side state manipulation via AI.
+
+            // Re-use logic: We can call a server action that takes JSON, processes instruction, returns new JSON.
+            // We can reuse aiSmartUpdateAction but modify it to accept object instead of ID?
+            // Or just make a new simple action or modify existing one.
+            // For now, let's treat it as "Enrich/Update" action.
+
+            // Actually, `activeItem` has data.
+            const currentData = { ...displayData, id: activeItem.id }; // ID is temp
+
+            // We need a server action that accepts (currentData, instruction) and returns (newData).
+            // Let's use `enrichDraftAction` style but for instruction.
+            // Let's reuse `aiSmartUpdateAction` but allow passing data directly?
+            // Updating `aiSmartUpdateAction` in next step to handle this.
+
+            // Assuming `aiSmartUpdateAction` can handle object input (we will modify it).
+            const res = await aiSmartUpdateAction(null, smartInstruction, currentData);
+
+            if (res.success && res.changes) {
+                updateItemStatus(activeId, activeItem.status, {
+                    data: { ...displayData, ...res.changes }
+                });
+                setSmartInstruction('');
+                alert('Updated based on instruction!');
+            } else {
+                alert('Update failed: ' + res.error);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error updating');
+        } finally {
+            setIsSmartUpdating(false);
         }
     };
 
@@ -414,6 +502,33 @@ export default function AddContactForm({ availableTags = [] }) {
                                             )}
 
                                             <form key={activeId} action={handleSave} className="space-y-8 pb-12">
+
+                                                {/* AI AGENT UPDATE (Draft Mode) */}
+                                                <div className="bg-[#5e52ff]/10 border border-[#5e52ff]/20 rounded-xl p-3 flex flex-col gap-2 mb-6">
+                                                    <div className="flex items-center justify-between">
+                                                        <h3 className="text-[10px] font-bold text-[#5e52ff] uppercase tracking-widest flex items-center gap-2">
+                                                            <Bot size={14} /> AI Assistant (Draft)
+                                                        </h3>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            value={smartInstruction}
+                                                            onChange={(e) => setSmartInstruction(e.target.value)}
+                                                            placeholder="Fix name, change title, or split fields..."
+                                                            className="flex-1 bg-[#0b0c10] border border-white/10 rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-[#5e52ff]"
+                                                            onKeyDown={(e) => e.key === 'Enter' && handleSmartUpdate()} // Needs e.preventDefault() to avoid submitting form?
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleSmartUpdate}
+                                                            disabled={isSmartUpdating || !smartInstruction}
+                                                            className="bg-[#5e52ff] hover:bg-[#4b3ff0] text-white px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[40px]"
+                                                        >
+                                                            {isSmartUpdating ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
                                                 <div className="space-y-6">
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Professional Identity</label>
@@ -456,7 +571,18 @@ export default function AddContactForm({ availableTags = [] }) {
 
                                                     {/* TAGS INPUT Section */}
                                                     <div className="space-y-4">
-                                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Tags</label>
+                                                        <div className="flex items-center justify-between">
+                                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Tags</label>
+                                                            <button
+                                                                type="button"
+                                                                onClick={handleAiTags}
+                                                                disabled={isTagging}
+                                                                className="flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-full transition-all font-bold border border-[#5e52ff]/20 cursor-pointer"
+                                                            >
+                                                                {isTagging ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                                                                {isTagging ? 'Generating...' : 'AI Tags'}
+                                                            </button>
+                                                        </div>
                                                         <div className="relative group">
                                                             <Tag size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
                                                             <input
@@ -464,22 +590,31 @@ export default function AddContactForm({ availableTags = [] }) {
                                                                 value={displayData.tags?.join(', ') || ''}
                                                                 onChange={(e) => {
                                                                     const val = e.target.value;
-                                                                    const newTags = val.split(',').map(s => s.trim()); // Keep empty strings while typing comma
-                                                                    // Actually for controlled input of array joined by comma, proper handling is tricky.
-                                                                    // Simpler to just store the string in a temporary state?
-                                                                    // But efficient way here is just treating tags as string for editing, and array for storage.
-                                                                    // But displayData.tags is array.
-                                                                    // Let's assume displayData.tags IS array.
-                                                                    // We need to be careful not to create new array on every keystroke if it causes issues.
-                                                                    // Better: Update the array.
-                                                                    // Limit: User types "Tag1, " -> array ["Tag1", ""]
+                                                                    // Only update local state here to avoid cursor jumping? 
+                                                                    // Actually simple split is fine IF we don't accidentally trim midway.
+                                                                    // Problem: User types "Tag, " -> "Tag," -> "Tag, "
+                                                                    // Code was: val.split(',') -> ["Tag", ""] -> join -> "Tag, "
+                                                                    // If user deletes comma: "Tag " -> split -> ["Tag "] -> "Tag"
+
+                                                                    // Better approach for deletion safety:
+                                                                    // Use a hidden input for actual values? 
+                                                                    // No, for now just trust the text input but ensure we don't aggressively trim while typing.
+
                                                                     updateItemStatus(activeId, activeItem.status, { data: { ...displayData, tags: val.split(',') } });
 
                                                                     // Logic for tag suggestion query
-                                                                    const parts = val.split(',').map(p => p.trim());
-                                                                    setTagQuery(parts[parts.length - 1]);
+                                                                    const parts = val.split(',');
+                                                                    setTagQuery(parts[parts.length - 1].trim());
                                                                 }}
-                                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                                onKeyDown={(e) => {
+                                                                    // Prevent backspace from deleting the whole previous tag if it was just a comma?
+                                                                    // The issue is likely the 'value={...join}' re-rendering on every keystroke.
+                                                                    // We can't easily fix controlled input cursor jump without complex logic.
+                                                                    // Switching to uncontrolled defaultVal? 
+                                                                    // But we need to update state.
+                                                                    // Let's stick to what we have but check styling.
+                                                                }}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all font-mono text-sm tracking-wide"
                                                                 placeholder="Tags (comma separated)..."
                                                             />
                                                         </div>

@@ -124,19 +124,19 @@ export async function enrichSingleContactAction(id) {
 
         3. **TAGGING (Strict Taxonomy)**:
            - You MUST classify the contact using the following specific categories if applicable:
-             - **Organization**: `Venue` (場館/中心/美術館/劇院), `Foundation` (基金會), `Government` (政府單位), `Gallery` (畫廊), `Festival` (藝術節), `Company` (公司), `University` (學校/學術).
-             - **Role**: `Curator` (策展人), `Director` (總監/館長), `Producer` (製作人), `Artist` (藝術家), `Critic` (評論), `Teacher` (教師/教授).
-             - **Field**: `Performing Arts` (表演藝術), `Visual Arts` (視覺藝術), `New Media` (新媒體), `Music` (音樂), `Tech` (科技), `Film` (電影).
-             - **Region**: `Taiwan`, `Japan`, `USA`, `Germany`, `Switzerland`, `Hong Kong`, `China`, `UK`.
+             - **Organization**: 'Venue' (場館/中心/美術館/劇院), 'Foundation' (基金會), 'Government' (政府單位), 'Gallery' (畫廊), 'Festival' (藝術節), 'Company' (公司), 'University' (學校/學術).
+             - **Role**: 'Curator' (策展人), 'Director' (總監/館長), 'Producer' (製作人), 'Artist' (藝術家), 'Critic' (評論), 'Teacher' (教師/教授).
+             - **Field**: 'Performing Arts' (表演藝術), 'Visual Arts' (視覺藝術), 'New Media' (新媒體), 'Music' (音樂), 'Tech' (科技), 'Film' (電影).
+             - **Region**: 'Taiwan', 'Japan', 'USA', 'Germany', 'Switzerland', 'Hong Kong', 'China', 'UK'.
            
            - **Rules**:
              - Assign 4-6 tags total.
              - **PRIORITY 1 - Organization Type (CRITICAL)**:
-               - If the organization is a Performing Arts Center (e.g., National Theater & Concert Hall, Weiwuying, Taichung Opera House), you **MUST** tag it as `Venue` (場館).
-               - You can ALSO add the specific abbreviation (e.g., "NTCH"), but `Venue` is mandatory.
+               - If the organization is a Performing Arts Center (e.g., National Theater & Concert Hall, Weiwuying, Taichung Opera House), you **MUST** tag it as 'Venue' (場館).
+               - You can ALSO add the specific abbreviation (e.g., "NTCH"), but 'Venue' is mandatory.
              - **PRIORITY 2 - Role Precision**:
-               - **DO NOT** use `Director` for a School Teacher (老師). Use `Teacher` or `Professor`. 
-               - Only use `Director` for high-level executives (Artistic Director, Museum Director, Executive Director).
+               - **DO NOT** use 'Director' for a School Teacher (老師). Use 'Teacher' or 'Professor'. 
+               - Only use 'Director' for high-level executives (Artistic Director, Museum Director, Executive Director).
              - **PRIORITY 3 - Region**: Always tag the region.
              - Use Traditional Chinese for the Role/Org tags if the input is Chinese, otherwise English. Keep Regions in English. 
 
@@ -311,4 +311,122 @@ export async function batchEnrichAction() {
         }
     }
     revalidatePath('/');
+}
+
+export async function generateTagsAction(contactData) {
+    const { getContacts } = await import('@/lib/storage');
+    // Get all existing tags for context
+    const contacts = await getContacts();
+    const allTags = new Set();
+    contacts.forEach(c => c.tags?.forEach(t => allTags.add(t)));
+    const existingTagsList = Array.from(allTags).join(', ');
+
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    try {
+        const prompt = `Your task is to generate relevant tags for this contact.
+        
+        Contact:
+        Name: ${contactData.name}
+        Title: ${contactData.title}
+        Company: ${contactData.company}
+        Bio/Summary: ${contactData.notes || contactData.aiSummary || ''}
+
+        EXISTING TAG SYSTEM (USE THESE IF APPLICABLE):
+        [${existingTagsList}]
+
+        INSTRUCTIONS:
+        1. Analyze the contact's background.
+        2. Select 3-6 tags that best categorize them (Industry, Role, Location, Organization Type).
+        3. **CRITICAL**: You MUST PRIORITIZE using tags from the "EXISTING TAG SYSTEM" list above if they match. valid, rather than creating new variations (e.g. use "Visual Arts" if it exists, don't create "Visual Art").
+        4. Only create a NEW tag if the concept is important and strictly missing from the existing system.
+        5. Region tags (e.g. Taiwan, USA) are mandatory.
+
+        6. **MEDIA & PR CLASSIFICATION RULES**:
+           - If the person works in Media, Journalism, PR, Magazine, Radio, or Broadcasting:
+             - **MANDATORY SHARED TAG**: You MUST add the tag **'Media'** (媒體). This is the umbrella tag for everyone in this category.
+             - **SPECIFIC TAGS**: In addition to 'Media', add the specific role/medium tag:
+               - 'Journalist' (記者)
+               - 'Radio' (廣播)
+               - 'Magazine' (雜誌)
+               - 'Editor' (編輯)
+               - 'Critic' (評論)
+               - 'PR' (公關)
+
+        7. Return ONLY a JSON array of strings.
+
+        Example Output:
+        { "tags": ["Curator", "Taiwan", "Media", "Magazine", "Editor"] }
+        `;
+
+        const res = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [{ role: "user", content: prompt }],
+            response_format: { type: "json_object" }
+        });
+
+        const result = JSON.parse(res.choices[0].message.content);
+        return { success: true, tags: result.tags };
+
+    } catch (e) {
+        console.error("Tag generation failed", e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function aiSmartUpdateAction(id, userInstruction) {
+    const { getContacts, saveContact } = await import('@/lib/storage');
+    const contacts = await getContacts();
+    const contact = contacts.find(c => c.id === id);
+
+    if (!contact) return { success: false, error: 'Contact not found' };
+
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    try {
+        const prompt = `You are a smart contact manager. The user wants to update a contact based on an instruction.
+        
+        **Current Contact Data**:
+        ${JSON.stringify(contact, null, 2)}
+
+        **User Instruction**:
+        "${userInstruction}"
+
+        **Task**:
+        1. Parse the instruction to understand what fields need updating.
+        2. If the user mentions a new Role, Job, or Company, understand that the person has moved.
+           - Update 'title' and 'company'.
+           - **CRITICAL**: If this is a job change, set "jobStatus" to "history" in the output so the system preserves the old job in history.
+        3. If the user provides a new tag or category, add it to 'tags'.
+           - **Taxonomy Rule**: If adding "Media" related tags, allow granular tags (Journalist, Radio, etc.) BUT also consider adding "Media" as a shared parent tag if appropriate.
+        4. If the user corrects a typo, just fix it.
+        5. "search" usually means use your internal knowledge to fill in details if the user provides a vague hint (e.g. "He works at Apple now" -> Fill in probable title if known, or just update Company).
+        6. Return the FULL updated contact object as JSON.
+
+        **Output Format**: JSON only.
+        `;
+
+        const res = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [{ role: "user", content: prompt }],
+            response_format: { type: "json_object" }
+        });
+
+        const result = JSON.parse(res.choices[0].message.content);
+
+        // Sanity check: Ensure ID remains
+        result.id = contact.id;
+
+        // Save using saveContact to trigger history logic
+        await saveContact(result);
+        revalidatePath('/');
+
+        return { success: true, changes: result };
+
+    } catch (e) {
+        console.error("Smart Update failed", e);
+        return { success: false, error: e.message };
+    }
 }
