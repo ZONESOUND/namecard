@@ -269,15 +269,6 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                     <div className="space-y-5 mt-8">
                                         <div className="flex items-center justify-between ml-1">
                                             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 border-l-2 border-[#5e52ff]">Tags</p>
-                                            <button
-                                                type="button"
-                                                onClick={handleAiTags}
-                                                disabled={isTagging}
-                                                className="flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-full transition-all font-bold border border-[#5e52ff]/20 cursor-pointer pointer-events-auto"
-                                            >
-                                                {isTagging ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                                                {isTagging ? 'Generating...' : 'AI Tags'}
-                                            </button>
                                         </div>
                                         <div className="relative group">
                                             <Tag size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
@@ -287,13 +278,22 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                                 defaultValue={contact.tags?.join(', ')}
                                                 onChange={(e) => {
                                                     const val = e.target.value;
-                                                    // Don't auto-trim here to allow typing spaces, just split naturally
                                                     const parts = val.split(',');
                                                     setTagQuery(parts[parts.length - 1].trim());
                                                 }}
                                                 placeholder="Tags (comma separated)..."
-                                                className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all font-mono text-sm tracking-wide"
+                                                className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-24 text-white focus:outline-none focus:border-[#5e52ff] transition-all font-mono text-sm tracking-wide"
                                             />
+                                            {/* Integrated Auto Tag Button */}
+                                            <button
+                                                type="button"
+                                                onClick={handleAiTags}
+                                                disabled={isTagging}
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-[10px] bg-[#5e52ff]/10 hover:bg-[#5e52ff] text-[#5e52ff] hover:text-white px-3 py-1.5 rounded-lg transition-all font-bold border border-[#5e52ff]/20 cursor-pointer pointer-events-auto h-8"
+                                            >
+                                                {isTagging ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                                                {isTagging ? '...' : 'Auto Tag'}
+                                            </button>
                                         </div>
                                         <div className="flex flex-wrap gap-2 px-1 min-h-[28px]">
                                             {(tagQuery ?

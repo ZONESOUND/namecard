@@ -325,7 +325,7 @@ export async function generateTagsAction(contactData) {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     try {
-        const prompt = `Your task is to generate relevant tags for this contact.
+        const prompt = `Your task is to generate relevant tags for this contact to expand their metadata.
         
         Contact:
         Name: ${contactData.name}
@@ -333,31 +333,24 @@ export async function generateTagsAction(contactData) {
         Company: ${contactData.company}
         Bio/Summary: ${contactData.notes || contactData.aiSummary || ''}
 
-        EXISTING TAG SYSTEM (USE THESE IF APPLICABLE):
+        EXISTING TAG SYSTEM (USE THESE PRECISELY IF APPLICABLE):
         [${existingTagsList}]
 
         INSTRUCTIONS:
-        1. Analyze the contact's background.
-        2. Select 3-6 tags that best categorize them (Industry, Role, Location, Organization Type).
-        3. **CRITICAL**: You MUST PRIORITIZE using tags from the "EXISTING TAG SYSTEM" list above if they match. valid, rather than creating new variations (e.g. use "Visual Arts" if it exists, don't create "Visual Art").
-        4. Only create a NEW tag if the concept is important and strictly missing from the existing system.
-        5. Region tags (e.g. Taiwan, USA) are mandatory.
+        1. **Goal**: Select 3-6 high-quality tags.
+        2. **Taxonomy First**: You MUST check the "EXISTING TAG SYSTEM" list first. If a concept exists there (e.g., "Visual Arts"), use that EXACT string. Do NOT create synonyms like "Visual Art" or "Art, Visual".
+        3. **Mandatory Categories**:
+           - **Region**: (e.g. Taiwan, Japan, USA, UK, Germany).
+           - **Role**: (e.g. Curator, Artist, Producer, Director, CEO).
+           - **Sector**: (e.g. Performing Arts, Visual Arts, Music, Tech, Gov).
+           - **Type**: (e.g. Venue, Festival, Company, Foundation).
+        4. **Media Rule**: If they are in Media/PR/Journalism, you MUST add the tag "Media".
+        5. **Language**: Use Traditional Chinese if the existing tags use it for that concept, otherwise English. (Regions are usually English).
 
-        6. **MEDIA & PR CLASSIFICATION RULES**:
-           - If the person works in Media, Journalism, PR, Magazine, Radio, or Broadcasting:
-             - **MANDATORY SHARED TAG**: You MUST add the tag **'Media'** (媒體). This is the umbrella tag for everyone in this category.
-             - **SPECIFIC TAGS**: In addition to 'Media', add the specific role/medium tag:
-               - 'Journalist' (記者)
-               - 'Radio' (廣播)
-               - 'Magazine' (雜誌)
-               - 'Editor' (編輯)
-               - 'Critic' (評論)
-               - 'PR' (公關)
-
-        7. Return ONLY a JSON array of strings.
+        6. Return ONLY a JSON array of strings.
 
         Example Output:
-        { "tags": ["Curator", "Taiwan", "Media", "Magazine", "Editor"] }
+        { "tags": ["Curator", "Taiwan", "Media", "Magazine", "Visual Arts"] }
         `;
 
         const res = await openai.chat.completions.create({
