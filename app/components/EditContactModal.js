@@ -13,6 +13,11 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
     const [isSmartUpdating, setIsSmartUpdating] = useState(false);
     const [smartInstruction, setSmartInstruction] = useState('');
     const [showAgent, setShowAgent] = useState(true); // Default to open
+
+    // Controlled Inputs State (Fixes jumping issues)
+    const [tagsValue, setTagsValue] = useState(contact.tags?.join(', ') || '');
+    const [aiSummaryValue, setAiSummaryValue] = useState(contact.aiSummary || '');
+
     const formRef = useRef(null);
     const tagsInputRef = useRef(null);
     const router = useRouter();
@@ -42,13 +47,13 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
         try {
             const res = await enrichSingleContactAction(contact.id);
             if (res.success) {
-                // Manually update the textarea value if possible, or trigger a refresh
                 alert('AI Analysis Complete! Please save to apply changes.');
-                if (formRef.current) {
-                    const aiField = formRef.current.querySelector('textarea[name="aiSummary"]');
-                    if (aiField) aiField.value = res.aiSummary;
-                }
-                router.refresh(); // Refresh server data
+                setAiSummaryValue(res.aiSummary);
+                // We don't necessarily need router.refresh() here if we want to keep the local state editing flow
+                // But if we want to update other parts of the UI, we can.
+                // For now, let's keep the user in the "Edit" flow with the new data.
+
+                // router.refresh(); // Removed to prevent potential prop/state conflict, rely on local state
             } else {
                 alert('Analysis failed: ' + res.error);
             }
@@ -72,11 +77,11 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
 
             const res = await generateTagsAction(contactData);
             if (res.success && res.tags) {
-                const currentVal = tagsInputRef.current.value;
-                const currentTags = currentVal.split(',').map(s => s.trim()).filter(Boolean);
+                const currentTags = tagsValue.split(',').map(s => s.trim()).filter(Boolean);
                 const uniqueTags = new Set([...currentTags, ...res.tags]);
 
-                tagsInputRef.current.value = Array.from(uniqueTags).join(', ');
+                const newTagsValue = Array.from(uniqueTags).join(', ');
+                setTagsValue(newTagsValue);
                 alert(`Generated tags: ${res.tags.join(', ')}`);
             } else {
                 alert('Tag generation failed: ' + (res.error || 'Unknown error'));
@@ -275,9 +280,10 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                             <input
                                                 ref={tagsInputRef}
                                                 name="tags"
-                                                defaultValue={contact.tags?.join(', ')}
+                                                value={tagsValue}
                                                 onChange={(e) => {
                                                     const val = e.target.value;
+                                                    setTagsValue(val);
                                                     const parts = val.split(',');
                                                     setTagQuery(parts[parts.length - 1].trim());
                                                 }}
@@ -304,9 +310,10 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                                     key={tag}
                                                     type="button"
                                                     onClick={() => {
-                                                        const currentParts = tagsInputRef.current.value.split(',').map(p => p.trim());
+                                                        const currentParts = tagsValue.split(',').map(p => p.trim());
                                                         currentParts[currentParts.length - 1] = tag;
-                                                        tagsInputRef.current.value = [...new Set(currentParts)].join(', ') + ', ';
+                                                        const newValue = [...new Set(currentParts)].join(', ') + ', ';
+                                                        setTagsValue(newValue);
                                                         setTagQuery('');
                                                         tagsInputRef.current.focus();
                                                     }}
@@ -336,7 +343,8 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                         </div>
                                         <textarea
                                             name="aiSummary"
-                                            defaultValue={contact.aiSummary}
+                                            value={aiSummaryValue}
+                                            onChange={(e) => setAiSummaryValue(e.target.value)}
                                             rows={8}
                                             className="w-full bg-[#5e52ff]/5 border border-[#5e52ff]/10 rounded-2xl px-5 py-4 text-gray-200 focus:outline-none focus:border-[#5e52ff] transition-all text-sm leading-relaxed resize-none"
                                             placeholder="AI generated background info (You can also write your own notes here)..."
