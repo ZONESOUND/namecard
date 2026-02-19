@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { updateContactAction, enrichSingleContactAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
-import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot } from 'lucide-react';
+import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot, Globe, Linkedin, Facebook } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -15,8 +15,11 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
     const [showAgent, setShowAgent] = useState(true); // Default to open
 
     // Controlled Inputs State (Fixes jumping issues)
+    // Controlled Inputs State (Fixes jumping issues)
     const [tagsValue, setTagsValue] = useState(contact.tags?.join(', ') || '');
     const [aiSummaryValue, setAiSummaryValue] = useState(contact.aiSummary || '');
+    const [socialProfiles, setSocialProfiles] = useState(contact.socialProfiles || {});
+    const [secondaryEmail, setSecondaryEmail] = useState(contact.secondaryEmail || '');
 
     const formRef = useRef(null);
     const tagsInputRef = useRef(null);
@@ -49,6 +52,12 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
             if (res.success) {
                 alert('AI Analysis Complete! Please save to apply changes.');
                 setAiSummaryValue(res.aiSummary);
+
+                // Update new fields if found
+                if (res.secondaryEmail) setSecondaryEmail(res.secondaryEmail);
+                if (res.socialProfiles) {
+                    setSocialProfiles(prev => ({ ...prev, ...res.socialProfiles }));
+                }
                 // We don't necessarily need router.refresh() here if we want to keep the local state editing flow
                 // But if we want to update other parts of the UI, we can.
                 // For now, let's keep the user in the "Edit" flow with the new data.
@@ -221,6 +230,7 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                 }} className="space-y-8 pb-32"> {/* Large padding bottom for footer space in mobile */}
 
                                     <input type="hidden" name="id" value={contact.id} />
+                                    <input type="hidden" name="socialProfiles" value={JSON.stringify(socialProfiles)} />
 
                                     {/* Identity */}
                                     <div className="space-y-6">
@@ -264,8 +274,62 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                                 <input name="email" type="email" defaultValue={contact.email} placeholder="Email" className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all" />
                                             </div>
                                             <div className="relative group">
+                                                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors opacity-50" />
+                                                <input
+                                                    name="secondaryEmail"
+                                                    type="email"
+                                                    value={secondaryEmail}
+                                                    onChange={(e) => setSecondaryEmail(e.target.value)}
+                                                    placeholder="Secondary Email"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                />
+                                            </div>
+                                            <div className="relative group">
                                                 <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
                                                 <input name="phone" defaultValue={contact.phone} placeholder="Phone" className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Social Profiles */}
+                                    <div className="space-y-5 mt-8">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 border-l-2 border-[#5e52ff]">Online Presence</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div className="relative group">
+                                                <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                <input
+                                                    value={socialProfiles.website || ''}
+                                                    onChange={(e) => setSocialProfiles({ ...socialProfiles, website: e.target.value })}
+                                                    placeholder="Website"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                />
+                                            </div>
+                                            <div className="relative group">
+                                                <Linkedin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                <input
+                                                    value={socialProfiles.linkedin || ''}
+                                                    onChange={(e) => setSocialProfiles({ ...socialProfiles, linkedin: e.target.value })}
+                                                    placeholder="LinkedIn URL"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                />
+                                            </div>
+                                            <div className="relative group">
+                                                <Facebook size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                <input
+                                                    value={socialProfiles.facebook || ''}
+                                                    onChange={(e) => setSocialProfiles({ ...socialProfiles, facebook: e.target.value })}
+                                                    placeholder="Facebook URL"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                />
+                                            </div>
+                                            <div className="relative group">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs group-focus-within:text-[#5e52ff] transition-colors">IG</span>
+                                                <input
+                                                    value={socialProfiles.instagram || ''}
+                                                    onChange={(e) => setSocialProfiles({ ...socialProfiles, instagram: e.target.value })}
+                                                    placeholder="Instagram URL"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                />
                                             </div>
                                         </div>
                                     </div>

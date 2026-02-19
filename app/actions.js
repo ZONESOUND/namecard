@@ -27,6 +27,8 @@ export async function addContactAction(formData) {
         jobStatus: formData.get('jobStatus'),
         id: formData.get('id'),
         imageUrl: formData.get('imageUrl'), // Capture Image URL
+        socialProfiles: formData.get('socialProfiles') ? JSON.parse(formData.get('socialProfiles')) : {},
+        secondaryEmail: formData.get('secondaryEmail'),
     };
 
     await saveContact(rawFormData);
@@ -60,7 +62,10 @@ export async function updateContactAction(formData) {
         metAt: formData.get('metAt'),
         notes: formData.get('notes'),
         tags: tags,
-        aiSummary: formData.get('aiSummary') || null
+        tags: tags,
+        aiSummary: formData.get('aiSummary') || null,
+        socialProfiles: formData.get('socialProfiles') ? JSON.parse(formData.get('socialProfiles')) : (contact.socialProfiles || {}), // Preservation handled by merge, but here we explicitly look for form data
+        secondaryEmail: formData.get('secondaryEmail'),
     };
 
     await updateContact(id, updates);
@@ -114,35 +119,28 @@ export async function enrichSingleContactAction(id) {
 
         **Instructions**:
         1. **CORRECTION (High Priority)**: 
-           - FIX OCR errors in Name, Title, Company (e.g., "簡瑞齊" -> "簡瑞春").
+           - FIX OCR errors (Name/Title/Company).
            - Check Email/Phone: Fix if typo'd. 
            
-        2. **ENRICHMENT (Mandatory)**:
-           - **Identify the Person**: Check your internal knowledge for this person.
-           - **Fallback Strategy (CRITICAL)**: If you do NOT know the person, you **MUST** describe the **Organization's significance** and the **Role's responsibilities** instead. 
-           - **Style**: Professional, objective, Traditional Chinese context.
+        2. **VERIFICATION & ENRICHMENT (Mandatory)**:
+           - **Sanity Check**: Does this person exist in public records? 
+             - If YES: Provide a concise professional summary.
+             - If NO or UNSURE: Write "Unknown Person." and then describe the **Organization** instead.
+           - **Social Media**: Search for public LinkedIn, Facebook, Instagram, or Personal Website. 
+           - **Secondary Contact**: Look for alternative emails or phone numbers.
+           - **Style**: strictly professional, factual, NO FLUFF. No "visionary", "distinguished", "leading" kinds of adjectives unless part of a proper noun.
+           - **Language**: Traditional Chinese.
 
-        3. **TAGGING (Strict Taxonomy)**:
-           - You MUST classify the contact using the following specific categories if applicable:
-             - **Organization**: 'Venue' (場館/中心/美術館/劇院), 'Foundation' (基金會), 'Government' (政府單位), 'Gallery' (畫廊), 'Festival' (藝術節), 'Company' (公司), 'University' (學校/學術).
-             - **Role**: 'Curator' (策展人), 'Director' (總監/館長), 'Producer' (製作人), 'Artist' (藝術家), 'Critic' (評論), 'Teacher' (教師/教授).
-             - **Field**: 'Performing Arts' (表演藝術), 'Visual Arts' (視覺藝術), 'New Media' (新媒體), 'Music' (音樂), 'Tech' (科技), 'Film' (電影).
-             - **Region**: 'Taiwan', 'Japan', 'USA', 'Germany', 'Switzerland', 'Hong Kong', 'China', 'UK'.
-           
-           - **Rules**:
-             - Assign 4-6 tags total.
-             - **PRIORITY 1 - Organization Type (CRITICAL)**:
-               - If the organization is a Performing Arts Center (e.g., National Theater & Concert Hall, Weiwuying, Taichung Opera House), you **MUST** tag it as 'Venue' (場館).
-               - You can ALSO add the specific abbreviation (e.g., "NTCH"), but 'Venue' is mandatory.
-             - **PRIORITY 2 - Role Precision**:
-               - **DO NOT** use 'Director' for a School Teacher (老師). Use 'Teacher' or 'Professor'. 
-               - Only use 'Director' for high-level executives (Artistic Director, Museum Director, Executive Director).
-             - **PRIORITY 3 - Region**: Always tag the region.
-             - Use Traditional Chinese for the Role/Org tags if the input is Chinese, otherwise English. Keep Regions in English. 
+        3. **TAGGING (Strict & Comprehensive)**:
+           - **Nationality/Region (MANDATORY)**: You MUST infer the country/region (e.g., 'Taiwan', 'Japan', 'USA', 'China', 'Hong Kong', 'Singapore', 'Malaysia').
+             - Multiple regions allowed if they split time (e.g. "Taiwan", "USA").
+           - **Organization Type**: 'Venue', 'Festival', 'Gallery', 'Government', 'Company', 'School', 'Foundation'.
+           - **Role**: 'Curator', 'Artist', 'Director', 'Producer', 'Critic', 'Collector'.
+           - **Field**: 'Performing Arts', 'Visual Arts', 'Music', 'Tech', 'Film', 'Literature'.
 
-        4. **OUTPUT**:
-           - Return JSON.
-           - NO email/phone in summary.
+        4. **OUTPUT JSON**:
+           - socialProfiles: { "linkedin": "url", "facebook": "url", "instagram": "url", "website": "url" }
+           - secondaryEmail: string or null
         
         Format:
         {
@@ -150,7 +148,9 @@ export async function enrichSingleContactAction(id) {
             "title": "Corrected Title",
             "company": "Corrected Company",
             "email": "Corrected Email",
-            "tags": ["Tag1", "Tag2"],
+            "secondaryEmail": "alt@email.com",
+            "socialProfiles": { "linkedin": "...", "website": "..." },
+            "tags": ["Taiwan", "Curator", "Visual Arts"],
             "aiSummary": "..."
         }`;
 
@@ -170,6 +170,13 @@ export async function enrichSingleContactAction(id) {
         if (result.name && result.name !== contact.name) { contact.name = result.name; hasChanges = true; }
         if (result.email && result.email !== contact.email) { contact.email = result.email; hasChanges = true; }
         if (result.phone && result.phone !== contact.phone) { contact.phone = result.phone; hasChanges = true; }
+
+        // Merge New Fields
+        if (result.secondaryEmail) { contact.secondaryEmail = result.secondaryEmail; hasChanges = true; }
+        if (result.socialProfiles) {
+            contact.socialProfiles = { ...(contact.socialProfiles || {}), ...result.socialProfiles };
+            hasChanges = true;
+        }
 
         // Merge AI Tags
         if (result.tags && Array.isArray(result.tags) && result.tags.length > 0) {
@@ -248,9 +255,12 @@ export async function enrichDraftAction(currData) {
             "aiSummary": "..."
         }`;
 
+        // Reinforce Region
+        const mandatoryRegionPrompt = prompt + "\n\nCRITICAL: You MUST include a 'Region' tag (e.g. Taiwan, Japan, USA, China, Hong Kong) based on the contact details.";
+
         const res = await openai.chat.completions.create({
             model: "gpt-4o",
-            messages: [{ role: "user", content: prompt }],
+            messages: [{ role: "user", content: mandatoryRegionPrompt }],
             response_format: { type: "json_object" }
         });
 
@@ -290,6 +300,7 @@ export async function batchEnrichAction() {
                 - If data is ambiguous, keep it extremely brief (one sentence).
                 - For 'whkuo@nycu.edu.tw', identify as 郭文華 (Wen-Hua Kuo), Associate University Librarian at NYCU, expert in STS (Science, Technology, and Society).
                 - Language: Traditional Chinese.
+                - **MANDATORY**: Include the Country/Region in the summary text (e.g. "台灣", "美國") if known.
                 - Max 80 words.`;
 
                 const res = await openai.chat.completions.create({
@@ -346,6 +357,9 @@ export async function generateTagsAction(contactData) {
            - **Type**: (e.g. Venue, Festival, Company, Foundation).
         4. **Media Rule**: If they are in Media/PR/Journalism, you MUST add the tag "Media".
         5. **Language**: Use Traditional Chinese if the existing tags use it for that concept, otherwise English. (Regions are usually English).
+        
+        **CRITICAL**: You MUST include a "Region" tag (e.g. Taiwan, Japan, USA, China, Hong Kong). If unknown, infer from Company or Email domain.
+
 
         6. Return ONLY a JSON array of strings.
 
@@ -396,7 +410,8 @@ export async function aiSmartUpdateAction(id, userInstruction) {
            - **Taxonomy Rule**: If adding "Media" related tags, allow granular tags (Journalist, Radio, etc.) BUT also consider adding "Media" as a shared parent tag if appropriate.
         4. If the user corrects a typo, just fix it.
         5. "search" usually means use your internal knowledge to fill in details if the user provides a vague hint (e.g. "He works at Apple now" -> Fill in probable title if known, or just update Company).
-        6. Return the FULL updated contact object as JSON.
+        6. **Social/Contact Info**: If the user provides a LinkedIn URL or secondary email, add it to 'socialProfiles' or 'secondaryEmail'.
+        7. Return the FULL updated contact object as JSON.
 
         **Output Format**: JSON only.
         `;
