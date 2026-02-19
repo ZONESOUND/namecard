@@ -233,6 +233,7 @@ export async function enrichDraftAction(currData) {
         2. **ENRICHMENT**:
            - **Identify the Person**: Check your internal knowledge.
            - **Fallback**: Describe the **Organization's significance** and **Role**. 
+           - **Socials**: Extract Website, LinkedIn, Facebook, Instagram if known or inferable.
            - **Style**: Professional, objective, Traditional Chinese context.
 
         3. **TAGGING**:
@@ -251,6 +252,8 @@ export async function enrichDraftAction(currData) {
             "title": "Corrected Title",
             "company": "Corrected Company",
             "email": "Corrected Email",
+            "secondaryEmail": "alt@email.com",
+            "socialProfiles": { "website": "https://...", "linkedin": "..." },
             "tags": ["Tag1", "Tag2"],
             "aiSummary": "..."
         }`;

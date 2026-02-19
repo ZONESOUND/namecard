@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { addContactAction, checkDuplicateAction, enrichDraftAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
-import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft, RefreshCw, Bot } from 'lucide-react';
+import { Plus, X, Upload, Loader2, Sparkles, CheckCircle2, AlertCircle, FileImage, Trash2, Tag, Calendar, AlignLeft, RefreshCw, Bot, Globe, Linkedin, Facebook, Instagram, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AddContactForm({ availableTags = [] }) {
@@ -177,7 +177,9 @@ export default function AddContactForm({ availableTags = [] }) {
                     company: res.result.company || activeItem.data.company,
                     email: res.result.email || activeItem.data.email,
                     tags: newTags,
-                    aiSummary: res.result.aiSummary || activeItem.data.aiSummary
+                    aiSummary: res.result.aiSummary || activeItem.data.aiSummary,
+                    socialProfiles: res.result.socialProfiles || activeItem.data.socialProfiles || {},
+                    secondaryEmail: res.result.secondaryEmail || activeItem.data.secondaryEmail
                 };
 
                 updateItemStatus(activeId, activeItem.status, { data: enrichedData });
@@ -322,7 +324,9 @@ export default function AddContactForm({ availableTags = [] }) {
                 title: formData.get('title'),
                 company: formData.get('company'),
                 email: formData.get('email'),
+                secondaryEmail: formData.get('secondaryEmail'),
                 phone: formData.get('phone'),
+                socialProfiles: formData.get('socialProfiles') ? JSON.parse(formData.get('socialProfiles')) : {},
                 tags: formData.get('tags')?.split(',').map(s => s.trim()).filter(Boolean) || [],
                 metAt: formData.get('metAt') || activeItem.data?.metAt,
                 notes: formData.get('notes') || activeItem.data?.notes,
@@ -361,7 +365,7 @@ export default function AddContactForm({ availableTags = [] }) {
     };
 
     const activeItem = queue.find(i => i.id === activeId);
-    const displayData = activeItem?.data || { name: '', title: '', company: '', email: '', phone: '', metAt: '', notes: '', tags: [] };
+    const displayData = activeItem?.data || { name: '', title: '', company: '', email: '', secondaryEmail: '', phone: '', metAt: '', notes: '', tags: [], socialProfiles: {} };
     const pendingCount = queue.filter(i => i.status !== 'saved').length;
     const isBatchMode = queue.length > 0;
 
@@ -679,6 +683,79 @@ export default function AddContactForm({ availableTags = [] }) {
                                                                 className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                                 placeholder="Phone"
                                                             />
+                                                        </div>
+                                                        <div className="grid grid-cols-1 gap-4">
+                                                            <input
+                                                                name="secondaryEmail"
+                                                                value={displayData.secondaryEmail || ''}
+                                                                onChange={(e) => updateItemStatus(activeId, activeItem.status, { data: { ...displayData, secondaryEmail: e.target.value } })}
+                                                                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
+                                                                placeholder="Secondary Email"
+                                                            />
+                                                        </div>
+
+                                                        <div className="space-y-3 pt-2">
+                                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-1">Online Presence</label>
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                <div className="relative group">
+                                                                    <Globe size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                                    <input
+                                                                        value={displayData.socialProfiles?.website || ''}
+                                                                        onChange={(e) => updateItemStatus(activeId, activeItem.status, {
+                                                                            data: {
+                                                                                ...displayData,
+                                                                                socialProfiles: { ...displayData.socialProfiles, website: e.target.value }
+                                                                            }
+                                                                        })}
+                                                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
+                                                                        placeholder="Website URL"
+                                                                    />
+                                                                </div>
+                                                                <div className="relative group">
+                                                                    <Linkedin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#0077b5] transition-colors" />
+                                                                    <input
+                                                                        value={displayData.socialProfiles?.linkedin || ''}
+                                                                        onChange={(e) => updateItemStatus(activeId, activeItem.status, {
+                                                                            data: {
+                                                                                ...displayData,
+                                                                                socialProfiles: { ...displayData.socialProfiles, linkedin: e.target.value }
+                                                                            }
+                                                                        })}
+                                                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
+                                                                        placeholder="LinkedIn URL"
+                                                                    />
+                                                                </div>
+                                                                <div className="relative group">
+                                                                    <Facebook size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#1877f2] transition-colors" />
+                                                                    <input
+                                                                        value={displayData.socialProfiles?.facebook || ''}
+                                                                        onChange={(e) => updateItemStatus(activeId, activeItem.status, {
+                                                                            data: {
+                                                                                ...displayData,
+                                                                                socialProfiles: { ...displayData.socialProfiles, facebook: e.target.value }
+                                                                            }
+                                                                        })}
+                                                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
+                                                                        placeholder="Facebook URL"
+                                                                    />
+                                                                </div>
+                                                                <div className="relative group">
+                                                                    <Instagram size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#E1306C] transition-colors" />
+                                                                    <input
+                                                                        value={displayData.socialProfiles?.instagram || ''}
+                                                                        onChange={(e) => updateItemStatus(activeId, activeItem.status, {
+                                                                            data: {
+                                                                                ...displayData,
+                                                                                socialProfiles: { ...displayData.socialProfiles, instagram: e.target.value }
+                                                                            }
+                                                                        })}
+                                                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all text-sm"
+                                                                        placeholder="Instagram URL"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/* Hidden input to serialize socialProfiles for FormData */}
+                                                            <input type="hidden" name="socialProfiles" value={JSON.stringify(displayData.socialProfiles || {})} />
                                                         </div>
                                                     </div>
 

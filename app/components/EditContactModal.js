@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { updateContactAction, enrichSingleContactAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
-import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot, Globe, Linkedin, Facebook } from 'lucide-react';
+import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot, Globe, Linkedin, Facebook, Instagram, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -301,35 +301,55 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                                     value={socialProfiles.website || ''}
                                                     onChange={(e) => setSocialProfiles({ ...socialProfiles, website: e.target.value })}
                                                     placeholder="Website"
-                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                 />
+                                                {socialProfiles.website && (
+                                                    <a href={socialProfiles.website} target="_blank" rel="noopener noreferrer" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#5e52ff] transition-colors p-1" title="Open Website">
+                                                        <ExternalLink size={16} />
+                                                    </a>
+                                                )}
                                             </div>
                                             <div className="relative group">
-                                                <Linkedin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                <Linkedin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#0077b5] transition-colors" />
                                                 <input
                                                     value={socialProfiles.linkedin || ''}
                                                     onChange={(e) => setSocialProfiles({ ...socialProfiles, linkedin: e.target.value })}
                                                     placeholder="LinkedIn URL"
-                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                 />
+                                                {socialProfiles.linkedin && (
+                                                    <a href={socialProfiles.linkedin} target="_blank" rel="noopener noreferrer" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#0077b5] transition-colors p-1" title="Open LinkedIn">
+                                                        <ExternalLink size={16} />
+                                                    </a>
+                                                )}
                                             </div>
                                             <div className="relative group">
-                                                <Facebook size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#5e52ff] transition-colors" />
+                                                <Facebook size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#1877f2] transition-colors" />
                                                 <input
                                                     value={socialProfiles.facebook || ''}
                                                     onChange={(e) => setSocialProfiles({ ...socialProfiles, facebook: e.target.value })}
                                                     placeholder="Facebook URL"
-                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                 />
+                                                {socialProfiles.facebook && (
+                                                    <a href={socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#1877f2] transition-colors p-1" title="Open Facebook">
+                                                        <ExternalLink size={16} />
+                                                    </a>
+                                                )}
                                             </div>
                                             <div className="relative group">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs group-focus-within:text-[#5e52ff] transition-colors">IG</span>
+                                                <Instagram size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-[#E1306C] transition-colors" />
                                                 <input
                                                     value={socialProfiles.instagram || ''}
                                                     onChange={(e) => setSocialProfiles({ ...socialProfiles, instagram: e.target.value })}
                                                     placeholder="Instagram URL"
-                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
+                                                    className="w-full bg-[#13151b] border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white focus:outline-none focus:border-[#5e52ff] transition-all"
                                                 />
+                                                {socialProfiles.instagram && (
+                                                    <a href={socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#E1306C] transition-colors p-1" title="Open Instagram">
+                                                        <ExternalLink size={16} />
+                                                    </a>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
