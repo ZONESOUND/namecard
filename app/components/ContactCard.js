@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail, Building2, Copy, Trash2, Phone, Sparkles, Pencil, Calendar, ChevronRight } from 'lucide-react';
+import { Mail, Building2, Copy, Trash2, Phone, Sparkles, Pencil, Calendar, ChevronRight, Globe, Linkedin, Facebook, Instagram } from 'lucide-react';
 import { deleteContactAction } from '../actions';
 import { useState } from 'react';
 
@@ -85,11 +85,50 @@ export default function ContactCard({ contact, availableTags = [], isSelected, o
                     >
                         <div className="flex items-center gap-3 overflow-hidden">
                             <Mail size={13} className="text-gray-600 flex-shrink-0 group-hover/email:text-[#5e52ff] transition-colors" />
-                            <span className="text-sm text-gray-500 group-hover/email:text-gray-300 transition-colors truncate">
+                            <span className="text-sm text-gray-400 group-hover/email:text-gray-300 transition-colors truncate">
                                 {contact.email}
                             </span>
                         </div>
                         {copied && <span className="text-[10px] text-green-500 font-mono font-bold">COPIED</span>}
+                    </div>
+                )}
+
+                {contact.secondaryEmail && (
+                    <div className="flex items-center gap-3 px-2 py-1 -ml-2 text-sm text-gray-500">
+                        <Mail size={13} className="text-gray-600 flex-shrink-0 opacity-50" />
+                        <span className="truncate text-xs">{contact.secondaryEmail}</span>
+                    </div>
+                )}
+
+                {contact.phone && (
+                    <div className="flex items-center gap-3 px-2 py-1 -ml-2 text-sm text-gray-500">
+                        <Phone size={13} className="text-gray-600 flex-shrink-0" />
+                        <span className="truncate text-xs">{contact.phone}</span>
+                    </div>
+                )}
+
+                {contact.socialProfiles && Object.values(contact.socialProfiles).some(v => v) && (
+                    <div className="flex flex-wrap gap-2 px-2 pt-1 -ml-2">
+                        {contact.socialProfiles.website && (
+                            <a href={contact.socialProfiles.website} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#5e52ff] transition-colors" onClick={e => e.stopPropagation()}>
+                                <Globe size={13} />
+                            </a>
+                        )}
+                        {contact.socialProfiles.linkedin && (
+                            <a href={contact.socialProfiles.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#0077b5] transition-colors" onClick={e => e.stopPropagation()}>
+                                <Linkedin size={13} />
+                            </a>
+                        )}
+                        {contact.socialProfiles.facebook && (
+                            <a href={contact.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#1877f2] transition-colors" onClick={e => e.stopPropagation()}>
+                                <Facebook size={13} />
+                            </a>
+                        )}
+                        {contact.socialProfiles.instagram && (
+                            <a href={contact.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#E1306C] transition-colors" onClick={e => e.stopPropagation()}>
+                                <Instagram size={13} />
+                            </a>
+                        )}
                     </div>
                 )}
             </div>
