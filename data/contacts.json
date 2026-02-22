@@ -13,9 +13,11 @@
     ],
     "id": "cbb7256b-7e87-4f6b-85e3-49281de16187",
     "addedAt": "2026-01-21T14:41:40.277Z",
-    "updatedAt": "2026-01-22T08:20:56.027Z",
+    "updatedAt": "2026-02-12T14:32:33.435Z",
     "aiSummary": "黃宏文先生目前擔任文化部藝術發展司的副司長，負責推動台灣的藝術文化政策和發展計劃。藝術發展司致力於促進藝術創作、支持藝術人才培育、並推廣國際文化交流，以提升台灣的藝術多樣性和國際影響力。黃先生在推動文化政策方面有豐富的經驗，致力於提升本土藝術的國際能見度。他以專業的管理能力和策劃技巧，努力促進台灣藝術界的躍進和成長。",
-    "history": []
+    "history": [],
+    "metAt": "2026 工研院藝術進駐期中報告",
+    "notes": null
   },
   {
     "name": "宮田 哲",
@@ -255,13 +257,13 @@
     "aiSummary": "Ultra-lab是一家專注於創客和數位製造工具的公司，旨在推動創新和技術創業。他們提供一系列服務，包括研討會、工作坊和定制技術解決方案，以教育和啟發全球的創客和開發者。該公司致力於創造一個支援各種創意和技術項目的開放平台，使個人和組織能夠將其創意轉化為現實並在技術領域取得成功。Ultra-lab強調合作與知識共享，並積極推動全球創客社群的發展。"
   },
   {
-    "name": "戴星熹 Star Tai",
+    "name": "戴星磊 Star Tai",
     "title": "Business Development Dept. Deputy Director (業務發展組 資深組長/代理副總監)",
     "company": "財團法人台北市文化基金會 松山文創園區",
     "email": "star@taipeiculture.org",
     "phone": "+886 936 032 446",
     "metAt": "",
-    "notes": "",
+    "notes": null,
     "tags": [
       "文化基金會",
       "松山文創園區",
@@ -272,7 +274,7 @@
     "id": "ca7d9f7d-70bd-489f-aa72-d2530acfad84",
     "history": [],
     "addedAt": "2026-01-22T07:20:25.064Z",
-    "updatedAt": "2026-01-22T08:21:43.575Z",
+    "updatedAt": "2026-02-17T07:23:52.135Z",
     "aiSummary": "戴星熹（Star Tai）擔任財團法人台北市文化基金會松山文創園區業務發展組的資深組長和代理副總監。他在該機構的職責包括推動商業開發和文化活動的住交，並致力於促進文化創意產業的成長。松山文創園區位於台北，是一個融合文化、創新和藝術的空間，為各類文化活動和創意展覽提供平台，支持文化事業的發展與推廣。如需聯繫，他的電郵為star@taipeiculture.org。"
   },
   {
@@ -640,13 +642,20 @@
     "phone": "02-2737-8031 / 02-6630-0635",
     "metAt": "",
     "notes": null,
-    "tags": [],
+    "tags": [
+      "Taiwan",
+      "NSTC",
+      "Research",
+      "科技",
+      "Development",
+      "研究機構"
+    ],
     "jobStatus": null,
     "id": "76488d8d-65c9-4440-9032-6f233ebe4764",
     "imageUrl": null,
     "history": [],
     "addedAt": "2026-01-24T04:11:04.496Z",
-    "updatedAt": "2026-01-24T04:12:07.871Z",
+    "updatedAt": "2026-02-17T07:21:28.204Z",
     "aiSummary": "張龍耀先生目前擔任國家實驗研究院的主任，負責管理及推動研究院的各項業務，支持科學技術的發展。作為一位專業人士，他致力於輔助研究計畫的執行，同時確保研究成果的應用。此外，他也持續推動跨領域合作，促進創新科技與產業的結合。"
   },
   {
@@ -1431,5 +1440,187 @@
     "history": [],
     "addedAt": "2026-01-26T02:16:17.720Z",
     "updatedAt": "2026-01-26T02:16:17.720Z"
+  },
+  {
+    "name": "劉鍾佑",
+    "title": "職涯發展中心 產學合作計畫統籌",
+    "company": "國立政治大學",
+    "email": "jerry01@g.nccu.edu.tw",
+    "phone": "02-2939-3091 ext.62034",
+    "metAt": "2025 政大職涯講座",
+    "notes": null,
+    "tags": [
+      "Taiwan",
+      "Directo",
+      "University",
+      "職涯發展",
+      "產學合作",
+      "NCCU"
+    ],
+    "jobStatus": null,
+    "id": "7ec410ef-d004-4a94-9b13-3c68f8492c58",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-17T07:18:58.858Z",
+    "updatedAt": "2026-02-17T07:19:42.195Z",
+    "aiSummary": "劉鍾佑先生目前擔任國立政治大學職涯發展中心之產學合作計畫統籌。國立政治大學作為台灣的著名學府之一，其職涯發展中心專注於協助學生與企業建立合作關係，增強學生在日後職場上的競爭力。劉先生在此負責的職務包括設計並推動各種產學合作計畫，促進學生的職涯發展，同時拓展與企業的合作機會。"
+  },
+  {
+    "name": "陳家輝",
+    "title": "客座助理教授, 作曲家",
+    "company": "國立臺南藝術大學",
+    "email": "chc725@gmail.com",
+    "phone": "0919-999612",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "國立臺南藝術大學",
+      "教授",
+      "音樂",
+      "藝文",
+      "Taiwan",
+      "NTUA",
+      "Taiwan",
+      "University",
+      "Education",
+      "Performing Arts"
+    ],
+    "jobStatus": null,
+    "id": "dac23a9b-f29e-4224-add7-d215eb0b8323",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-17T07:29:52.870Z",
+    "updatedAt": "2026-02-17T07:29:52.870Z"
+  },
+  {
+    "name": "蔡立德 (Tsai Li Te)",
+    "title": "",
+    "company": "定藝文化工作室",
+    "email": "charlse0413@gmail.com",
+    "phone": "0910480228",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Taiwan",
+      "Culture",
+      "藝術文化"
+    ],
+    "jobStatus": null,
+    "id": "2e5ff70f-41b6-4951-854e-da2847787df3",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-17T07:33:26.948Z",
+    "updatedAt": "2026-02-17T07:33:26.948Z"
+  },
+  {
+    "name": "曾聖凱",
+    "title": "跨領域設計科學研究中心 副主任, 教學發展中心 助理教授",
+    "company": "國立陽明交通大學 (NYCU)",
+    "email": "sky@nycu.edu.tw",
+    "phone": "+886 3 5712121 ext.56496, +886 988204763",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "高等教育",
+      "跨領域研究",
+      "台灣",
+      "Education",
+      "Taiwan",
+      "University",
+      "Research",
+      "NYCU"
+    ],
+    "jobStatus": null,
+    "id": "feace314-d0ef-46dc-a3a0-3f5caecf869e",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-17T07:34:26.912Z",
+    "updatedAt": "2026-02-17T07:34:26.912Z"
+  },
+  {
+    "name": "Sam Erpelding",
+    "title": "",
+    "company": "EOMAIA s.à r.l.-s.",
+    "email": "s.erpelding@eomaia-sound.lu",
+    "phone": "",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Sound Engineering",
+      "Luxembourg",
+      "Ecoacoustic Research"
+    ],
+    "jobStatus": null,
+    "id": "b9726f0b-507f-43a2-8ecf-bbf1f557d318",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-17T07:35:31.328Z",
+    "updatedAt": "2026-02-17T07:35:31.328Z"
+  },
+  {
+    "name": "王彥茹 (Rita Wang)",
+    "title": "Engineer, Executive Office (工程師, 行政辦公室)",
+    "company": "上銀科技股份有限公司 (HIWIN Technologies Corp.)",
+    "email": "rita.wang@hiwin.tw",
+    "phone": "+886-978-451800",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Engineer",
+      "Technology",
+      "Taiwan",
+      "robotic arm"
+    ],
+    "jobStatus": null,
+    "id": "cee4b38a-af94-49b8-9016-0798e9baabb0",
+    "imageUrl": null,
+    "history": [],
+    "addedAt": "2026-02-19T04:39:35.774Z",
+    "updatedAt": "2026-02-19T04:39:35.774Z"
+  },
+  {
+    "name": "Charles Rouleau",
+    "title": "",
+    "company": "Casino Luxembourg – Forum d'art contemporain",
+    "email": "charles.rouleau@casino-luxembourg.lu",
+    "phone": "+352 22 50 45",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Luxembourg",
+      "Contemporary Art",
+      "Cultural Institution"
+    ],
+    "jobStatus": null,
+    "id": "123a128b-25f2-4249-91eb-837e9c31d1e3",
+    "imageUrl": null,
+    "socialProfiles": {},
+    "secondaryEmail": null,
+    "history": [],
+    "addedAt": "2026-02-19T04:42:52.876Z",
+    "updatedAt": "2026-02-19T04:42:52.876Z"
+  },
+  {
+    "name": "李德偉",
+    "title": "人工智能及數碼學系系主任",
+    "company": "香港資訊科技學院",
+    "email": "glee@vtc.edu.hk",
+    "phone": "+852 2436 8566",
+    "metAt": null,
+    "notes": "",
+    "tags": [
+      "Artificial Intelligence",
+      "Education",
+      "Hong Kong",
+      "Technology"
+    ],
+    "jobStatus": null,
+    "id": "352dabad-fbe7-48b5-9ef8-eb9e512469b3",
+    "imageUrl": null,
+    "socialProfiles": {},
+    "secondaryEmail": null,
+    "history": [],
+    "addedAt": "2026-02-19T05:23:06.773Z",
+    "updatedAt": "2026-02-19T05:23:06.773Z"
   }
 ]

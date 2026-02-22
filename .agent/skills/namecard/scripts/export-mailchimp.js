@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { readAllRows, rowToContact } = require('./lib/sheets-client');
 
-const DATA_FILE = path.join(process.cwd(), 'data/contacts.json');
+require('dotenv').config({ path: path.join(process.cwd(), '.env.local') });
+
 const OUTPUT_FILE = path.join(process.cwd(), 'data/mailchimp-export.csv');
 
 function escapeCsv(value) {
@@ -13,68 +15,45 @@ function escapeCsv(value) {
   return stringValue;
 }
 
-function main() {
-  console.log('🚀 Starting Mailchimp Export...');
+async function main() {
+  console.log('🚀 Starting Mailchimp Export (from Google Sheets)...');
 
-  if (!fs.existsSync(DATA_FILE)) {
-    console.error(`❌ Data file not found: ${DATA_FILE}`);
-    process.exit(1);
-  }
-
-  const rawData = fs.readFileSync(DATA_FILE, 'utf8');
-  let contacts;
-  try {
-    contacts = JSON.parse(rawData);
-  } catch (error) {
-    console.error('❌ Failed to parse JSON data:', error);
-    process.exit(1);
-  }
-
+  const rows = await readAllRows();
+  const contacts = rows.map(rowToContact);
   console.log(`📦 Found ${contacts.length} contacts.`);
 
   const headers = ['Email Address', 'Full Name', 'Company', 'Title', 'Tags', 'Phone Number'];
-  const rows = [headers];
+  const csvRows = [headers];
 
   let skippedCount = 0;
 
   contacts.forEach(contact => {
-    // Only export contacts with email addresses
     if (!contact.email || !contact.email.trim()) {
       skippedCount++;
       return;
     }
 
-    const email = contact.email.trim();
-    const fullName = (contact.name || '').trim();
-    const company = (contact.company || '').trim();
-    const title = (contact.title || '').trim();
-    const phone = (contact.phone || '').trim();
-
-    // Join tags with commas, but ensure the field is quoted by escapeCsv if needed
-    // Mailchimp often imports tags as comma-separated if mapped to one field, 
-    // or sometimes requires specific formatting. A single comma-separated string is standard for bulk import.
-    const tags = Array.isArray(contact.tags) ? contact.tags.join(',') : '';
-
-    rows.push([
-      escapeCsv(email),
-      escapeCsv(fullName),
-      escapeCsv(company),
-      escapeCsv(title),
-      escapeCsv(tags),
-      escapeCsv(phone)
+    csvRows.push([
+      escapeCsv(contact.email.trim()),
+      escapeCsv((contact.name || '').trim()),
+      escapeCsv((contact.company || '').trim()),
+      escapeCsv((contact.title || '').trim()),
+      escapeCsv(Array.isArray(contact.tags) ? contact.tags.join(',') : ''),
+      escapeCsv((contact.phone || '').trim())
     ]);
   });
 
-  const csvContent = rows.map(row => row.join(',')).join('\n');
+  const csvContent = csvRows.map(row => row.join(',')).join('\n');
+  fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
+  fs.writeFileSync(OUTPUT_FILE, '\uFEFF' + csvContent, 'utf8');
 
-  // Add BOM for Excel compatibility (UTF-8 with BOM)
-  const bom = '\uFEFF';
-  fs.writeFileSync(OUTPUT_FILE, bom + csvContent, 'utf8');
-
-  console.log(`✅ Exported ${rows.length - 1} contacts to ${OUTPUT_FILE}`);
+  console.log(`✅ Exported ${csvRows.length - 1} contacts to ${OUTPUT_FILE}`);
   if (skippedCount > 0) {
     console.log(`⚠️  Skipped ${skippedCount} contacts without email addresses.`);
   }
 }
 
-main();
+main().catch(e => {
+  console.error('❌ Export failed:', e);
+  process.exit(1);
+});

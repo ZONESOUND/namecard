@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import EditContactModal from './EditContactModal';
 import ContactCard from './ContactCard';
-import { Search, Users, Zap, X, LayoutGrid, List, Filter, TrendingUp, Clock, Tag as TagIcon, ChevronRight, MapPin, Sparkles, Loader2, CheckSquare, Square, Download, Copy as CopyIcon, Mail as MailIcon } from 'lucide-react';
-import { batchEnrichAction } from '../actions';
+import { Search, Users, Zap, X, LayoutGrid, List, Filter, TrendingUp, Clock, Tag as TagIcon, ChevronRight, MapPin, Sparkles, Loader2, CheckSquare, Square, Download, Copy as CopyIcon, Mail as MailIcon, Star, ShieldCheck, ArrowUpDown } from 'lucide-react';
+import { batchEnrichAction, batchVerifyAction } from '../actions';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchableContactGrid({ contacts, availableTags = [] }) {
@@ -15,6 +15,9 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
     const [isEnriching, setIsEnriching] = useState(false);
     const [selectedIds, setSelectedIds] = useState(new Set());
     const [isExporting, setIsExporting] = useState(false);
+    const [sortBy, setSortBy] = useState('name'); // 'name' | 'importance' | 'recent'
+    const [filterStale, setFilterStale] = useState(false);
+    const [isVerifyingAll, setIsVerifyingAll] = useState(false);
 
     // NEW: Centralized Editing State
     const [editingContact, setEditingContact] = useState(null);
@@ -41,7 +44,7 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
 
     // 2. Filter Logic
     const filteredContacts = useMemo(() => {
-        return contacts.filter(contact => {
+        let result = contacts.filter(contact => {
             const term = searchTerm.toLowerCase();
             const matchesSearch = (
                 contact.name?.toLowerCase().includes(term) ||
@@ -54,9 +57,24 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
                 contact.tags?.includes(selectedTag) ||
                 (selectedTag === 'Taiwan' && contact.tags?.includes('台灣'))
             ) : true;
-            return matchesSearch && matchesTag;
+            const matchesStale = filterStale ? (
+                contact.verificationStatus === 'Stale' || contact.verificationStatus === 'Mismatch'
+            ) : true;
+            return matchesSearch && matchesTag && matchesStale;
         });
-    }, [contacts, searchTerm, selectedTag]);
+
+        // Sort
+        if (sortBy === 'importance') {
+            result.sort((a, b) => (b.importanceScore || 0) - (a.importanceScore || 0));
+        } else if (sortBy === 'recent') {
+            result.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+        } else {
+            // Default: name sort
+            result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        }
+
+        return result;
+    }, [contacts, searchTerm, selectedTag, filterStale, sortBy]);
 
     // 3. Recently Added (Visual Slice)
     const recentlyAdded = useMemo(() => {
@@ -146,6 +164,67 @@ export default function SearchableContactGrid({ contacts, availableTags = [] }) 
                                 <Sparkles size={14} />
                             )}
                             {isEnriching ? 'AI Researching...' : 'AI 批量補充背景'}
+                        </button>
+                        <button
+                            onClick={async () => {
+                                if (confirm('批次驗證所有聯絡人？（DNS 檢查 + 重要度計算，需要幾分鐘）')) {
+                                    setIsVerifyingAll(true);
+                                    try {
+                                        const res = await batchVerifyAction();
+                                        alert(`驗證完成！DNS: ${res.results.dns}, 重要度: ${res.results.importance}`);
+                                    } catch (e) {
+                                        alert('驗證過程發生錯誤。');
+                                    } finally {
+                                        setIsVerifyingAll(false);
+                                    }
+                                }
+                            }}
+                            disabled={isVerifyingAll}
+                            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${isVerifyingAll
+                                ? 'bg-gray-800 text-gray-500 border-white/5 cursor-not-allowed'
+                                : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500 hover:text-white shadow-lg shadow-emerald-500/10'
+                                }`}
+                        >
+                            {isVerifyingAll ? (
+                                <Loader2 size={14} className="animate-spin" />
+                            ) : (
+                                <ShieldCheck size={14} />
+                            )}
+                            {isVerifyingAll ? 'Verifying...' : '批次驗證'}
+                        </button>
+                    </div>
+
+                    {/* Sort & Filter */}
+                    <div className="space-y-3">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 ml-2">Sort & Filter</p>
+                        <div className="flex flex-col gap-1.5">
+                            {[
+                                { key: 'name', label: '按名稱', icon: Users },
+                                { key: 'importance', label: '按重要度', icon: Star },
+                                { key: 'recent', label: '按時間', icon: Clock },
+                            ].map(({ key, label, icon: Icon }) => (
+                                <button
+                                    key={key}
+                                    onClick={() => setSortBy(key)}
+                                    className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all ${
+                                        sortBy === key
+                                            ? 'bg-[#5e52ff]/10 text-[#5e52ff] font-medium'
+                                            : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    }`}
+                                >
+                                    <Icon size={14} /> {label}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            onClick={() => setFilterStale(!filterStale)}
+                            className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all border ${
+                                filterStale
+                                    ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 font-medium'
+                                    : 'text-gray-400 border-white/5 hover:bg-white/5 hover:text-white'
+                            }`}
+                        >
+                            <Filter size={14} /> {filterStale ? '顯示全部' : '僅顯示過期'}
                         </button>
                     </div>
 

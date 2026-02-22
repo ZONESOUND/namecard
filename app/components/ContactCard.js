@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail, Building2, Copy, Trash2, Phone, Sparkles, Pencil, Calendar, ChevronRight, Globe, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { Mail, Building2, Copy, Trash2, Phone, Sparkles, Pencil, Calendar, ChevronRight, Globe, Linkedin, Facebook, Instagram, ShieldCheck, ShieldAlert, ShieldQuestion, Star } from 'lucide-react';
 import { deleteContactAction } from '../actions';
 import { useState } from 'react';
 
@@ -60,9 +60,27 @@ export default function ContactCard({ contact, availableTags = [], isSelected, o
                 </button>
             </div>
 
+            {/* Importance Score Badge */}
+            {contact.importanceScore > 0 && (
+                <div className="absolute top-4 left-4 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+                    <Star size={10} className="text-amber-500" />
+                    <span className="text-[10px] font-bold text-amber-500">{contact.importanceScore}</span>
+                </div>
+            )}
+
             <div className="flex items-start gap-4 mb-5 pr-12">
-                <div className={`h-11 w-11 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-base shadow-inner ${avatarColor}`}>
-                    {initials}
+                <div className="relative">
+                    <div className={`h-11 w-11 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-base shadow-inner ${avatarColor}`}>
+                        {initials}
+                    </div>
+                    {/* Verification Status Dot */}
+                    {contact.verificationStatus && contact.verificationStatus !== 'Unknown' && (
+                        <div className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-[#13151b] ${
+                            contact.verificationStatus === 'Fresh' ? 'bg-emerald-500' :
+                            contact.verificationStatus === 'Stale' ? 'bg-amber-500' :
+                            contact.verificationStatus === 'Mismatch' ? 'bg-red-500' : 'bg-gray-500'
+                        }`} title={`Status: ${contact.verificationStatus}`} />
+                    )}
                 </div>
                 <div className="flex-1 min-w-0">
                     <h3 className="text-base font-bold text-white leading-tight truncate">{contact.name}</h3>
@@ -89,7 +107,11 @@ export default function ContactCard({ contact, availableTags = [], isSelected, o
                                 {contact.email}
                             </span>
                         </div>
-                        {copied && <span className="text-[10px] text-green-500 font-mono font-bold">COPIED</span>}
+                        <div className="flex items-center gap-1">
+                            {contact.emailValid === 'Valid' && <ShieldCheck size={12} className="text-emerald-500 flex-shrink-0" title="Email verified" />}
+                            {contact.emailValid === 'Invalid' && <ShieldAlert size={12} className="text-red-400 flex-shrink-0" title="Email domain invalid" />}
+                            {copied && <span className="text-[10px] text-green-500 font-mono font-bold">COPIED</span>}
+                        </div>
                     </div>
                 )}
 

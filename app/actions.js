@@ -441,3 +441,177 @@ export async function aiSmartUpdateAction(id, userInstruction) {
         return { success: false, error: e.message };
     }
 }
+
+// ============================
+// SMART VERIFICATION ACTIONS
+// ============================
+
+export async function verifyEmailDNSAction(contactId) {
+    const { getContacts, updateContact } = await import('@/lib/storage');
+    const dns = await import('dns');
+    const resolveMx = dns.promises.resolveMx;
+
+    const contacts = await getContacts();
+    const contact = contacts.find(c => c.id === contactId);
+    if (!contact) return { success: false, error: 'Contact not found' };
+
+    if (!contact.email || !contact.email.includes('@')) {
+        await updateContact(contactId, { emailValid: 'No Email' });
+        revalidatePath('/');
+        return { success: true, result: 'No Email' };
+    }
+
+    const domain = contact.email.split('@')[1];
+    try {
+        const records = await resolveMx(domain);
+        const status = records && records.length > 0 ? 'Valid' : 'Invalid';
+        await updateContact(contactId, { emailValid: status });
+        revalidatePath('/');
+        return { success: true, result: status };
+    } catch (e) {
+        await updateContact(contactId, { emailValid: 'Invalid' });
+        revalidatePath('/');
+        return { success: true, result: 'Invalid' };
+    }
+}
+
+export async function calculateImportanceAction(contactId) {
+    const { getContacts, updateContact } = await import('@/lib/storage');
+    const contacts = await getContacts();
+    const contact = contacts.find(c => c.id === contactId);
+    if (!contact) return { success: false, error: 'Contact not found' };
+
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    try {
+        const prompt = `Rate the professional relevance (0-100) of this contact to 紀柏豪 (Chi Po-Hao), a Taiwanese sound artist working in new media art, sound installations, and electroacoustic music.
+
+Contact:
+Name: ${contact.name}
+Title: ${contact.title}
+Company: ${contact.company}
+Tags: ${(contact.tags || []).join(', ')}
+Summary: ${contact.aiSummary || ''}
+
+Scoring criteria:
+- Institutional influence (arts organizations, funding bodies, major festivals): +20-30
+- Direct collaboration potential (curators, producers, artists in related fields): +20-30
+- Field overlap (sound art, new media, electroacoustic, digital art): +15-25
+- Geographic proximity (Taiwan-based or frequent Taiwan ties): +5-15
+- Active professional relationship indicators: +5-10
+
+Return ONLY a JSON object: { "score": <number>, "reason": "<brief reason in Traditional Chinese>" }`;
+
+        const res = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: prompt }],
+            response_format: { type: 'json_object' },
+            max_tokens: 200,
+        });
+
+        const result = JSON.parse(res.choices[0].message.content);
+        const score = Math.min(100, Math.max(0, parseInt(result.score) || 0));
+
+        await updateContact(contactId, { importanceScore: score });
+        revalidatePath('/');
+        return { success: true, score, reason: result.reason };
+    } catch (e) {
+        console.error('Importance calculation failed', e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function verifyStalenessAction(contactId) {
+    const { getContacts, updateContact } = await import('@/lib/storage');
+    const contacts = await getContacts();
+    const contact = contacts.find(c => c.id === contactId);
+    if (!contact) return { success: false, error: 'Contact not found' };
+
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    try {
+        const res = await openai.responses.create({
+            model: 'gpt-4o',
+            tools: [{ type: 'web_search_preview' }],
+            input: `Search the web: Is "${contact.name}" currently working at "${contact.company}" as "${contact.title}"? Find the most recent public information about this person's current role and affiliation. Report in Traditional Chinese.
+
+Return a JSON object:
+{
+  "status": "Fresh" | "Stale" | "Mismatch",
+  "evidence": "<what you found>",
+  "newTitle": "<if different, the current title>",
+  "newCompany": "<if different, the current company>"
+}
+
+- "Fresh" = confirmed still in same role
+- "Stale" = no recent info found, data might be outdated
+- "Mismatch" = found evidence of a different role/company`,
+            text: { format: { type: 'json_object' } },
+        });
+
+        const result = JSON.parse(res.output_text);
+        const now = new Date().toISOString().split('T')[0];
+
+        const updates = {
+            lastVerifiedAt: now,
+            verificationStatus: result.status || 'Unknown',
+        };
+
+        // If mismatch, add warning tag
+        if (result.status === 'Mismatch') {
+            const currentTags = new Set(contact.tags || []);
+            currentTags.add('Potential Info Mismatch');
+            updates.tags = Array.from(currentTags);
+        }
+
+        await updateContact(contactId, updates);
+        revalidatePath('/');
+        return {
+            success: true,
+            status: result.status,
+            evidence: result.evidence,
+            newTitle: result.newTitle,
+            newCompany: result.newCompany,
+        };
+    } catch (e) {
+        console.error('Staleness check failed', e);
+        // Fallback: mark as Unknown
+        const now = new Date().toISOString().split('T')[0];
+        await updateContact(contactId, {
+            lastVerifiedAt: now,
+            verificationStatus: 'Unknown',
+        });
+        revalidatePath('/');
+        return { success: false, error: e.message };
+    }
+}
+
+export async function batchVerifyAction() {
+    const { getContacts } = await import('@/lib/storage');
+    const contacts = await getContacts();
+    const results = { dns: 0, importance: 0, staleness: 0, errors: 0 };
+
+    for (const contact of contacts) {
+        try {
+            // 1. DNS check
+            await verifyEmailDNSAction(contact.id);
+            results.dns++;
+
+            // 2. Importance (only if not yet scored)
+            if (!contact.importanceScore) {
+                await calculateImportanceAction(contact.id);
+                results.importance++;
+                // Rate limiting
+                await new Promise(r => setTimeout(r, 2000));
+            }
+        } catch (e) {
+            results.errors++;
+            console.error(`Batch verify error for ${contact.name}:`, e.message);
+        }
+    }
+
+    revalidatePath('/');
+    return { success: true, results };
+}

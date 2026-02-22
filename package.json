@@ -12,13 +12,16 @@
     "cleanup": "node .agent/skills/namecard/scripts/cleanup-orphans.js",
     "normalize-tags": "node .agent/skills/namecard/scripts/normalize-tags.js",
     "export": "node .agent/skills/namecard/scripts/export-mailchimp.js",
-    "enrich": "node .agent/skills/namecard/scripts/enrich-all.js"
+    "enrich": "node .agent/skills/namecard/scripts/enrich-all.js",
+    "migrate-sheets": "node .agent/skills/namecard/scripts/migrate-to-sheets.js",
+    "verify": "node .agent/skills/namecard/scripts/verify-all.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.975.0",
     "@aws-sdk/lib-storage": "^3.975.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^11.0.0",
+    "googleapis": "^171.4.0",
     "jose": "^6.1.3",
     "lucide-react": "^0.330.0",
     "next": "14.1.0",

@@ -1,6 +1,6 @@
 const OpenAI = require('openai');
-const fs = require('fs');
 const path = require('path');
+const { readAllRows, writeAllRows, rowToContact, contactToRow, COL } = require('./lib/sheets-client');
 
 require('dotenv').config({ path: path.join(process.cwd(), '.env.local') });
 
@@ -9,14 +9,8 @@ const openai = new OpenAI({
 });
 
 async function enrichContacts() {
-    const contactsPath = path.join(process.cwd(), 'data/contacts.json');
-
-    if (!fs.existsSync(contactsPath)) {
-        console.error("Contacts file not found at " + contactsPath);
-        process.exit(1);
-    }
-
-    const contacts = JSON.parse(fs.readFileSync(contactsPath, 'utf8'));
+    const rows = await readAllRows();
+    const contacts = rows.map(rowToContact);
 
     console.log(`Starting enrichment for ${contacts.length} contacts...`);
     let updatedCount = 0;
@@ -24,13 +18,13 @@ async function enrichContacts() {
     for (let i = 0; i < contacts.length; i++) {
         const c = contacts[i];
 
-        // Only process if summary is missing or user requested specific update
+        // Only process if summary is missing
         if (c.aiSummary && c.aiSummary.length > 50) continue;
 
         console.log(`Enriching: ${c.name} @ ${c.company}...`);
 
         try {
-            const prompt = `You are a research assistant. 
+            const prompt = `You are a research assistant.
             1. Provide a brief professional background summary (in Traditional Chinese 繁體中文) for the following person and their organization.
             2. Suggest up to 5 relevant tags (in English or Traditional Chinese) for categorization.
 
@@ -55,14 +49,13 @@ async function enrichContacts() {
             const result = JSON.parse(response.choices[0].message.content);
 
             if (result.summary) {
-                c.aiSummary = result.summary;
+                rows[i][COL.aiSummary] = result.summary;
             }
 
             if (result.tags && Array.isArray(result.tags)) {
-                // Merge tags
                 const currentTags = new Set(c.tags || []);
                 result.tags.forEach(t => currentTags.add(t));
-                c.tags = Array.from(currentTags);
+                rows[i][COL.tags] = Array.from(currentTags).join(', ');
             }
 
             updatedCount++;
@@ -73,16 +66,14 @@ async function enrichContacts() {
     }
 
     if (updatedCount > 0) {
-        fs.writeFileSync(contactsPath, JSON.stringify(contacts, null, 2));
-        console.log(`\n💾 Saved updates for ${updatedCount} contacts.`);
-
-        // Note: We are NOT calling regenerateAllMarkdown here because that logic resides in lib/storage.js 
-        // which is part of the Next.js app, not this standalone script.
-        // To update markdown files, the user should run 'npm run pull' or force a regeneration if available.
-        console.log('⚠️  Please run the app or a separate markdown syncer to update .md files.');
+        await writeAllRows(rows);
+        console.log(`\n💾 Saved updates for ${updatedCount} contacts to Google Sheets.`);
     } else {
         console.log('✨ No contacts needed enrichment.');
     }
 }
 
-enrichContacts();
+enrichContacts().catch(e => {
+    console.error('❌ Enrichment failed:', e);
+    process.exit(1);
+});

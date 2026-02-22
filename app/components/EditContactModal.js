@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { updateContactAction, enrichSingleContactAction, generateTagsAction, aiSmartUpdateAction } from '../actions';
-import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot, Globe, Linkedin, Facebook, Instagram, ExternalLink } from 'lucide-react';
+import { updateContactAction, enrichSingleContactAction, generateTagsAction, aiSmartUpdateAction, verifyEmailDNSAction, calculateImportanceAction, verifyStalenessAction } from '../actions';
+import { X, Sparkles, Save, User, Briefcase, Building, Mail, Phone, Tag, Calendar, MapPin, AlignLeft, RefreshCw, Loader2, Bot, Globe, Linkedin, Facebook, Instagram, ExternalLink, ShieldCheck, ShieldAlert, Star, Search as SearchIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -13,8 +13,14 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
     const [isSmartUpdating, setIsSmartUpdating] = useState(false);
     const [smartInstruction, setSmartInstruction] = useState('');
     const [showAgent, setShowAgent] = useState(true); // Default to open
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [isDnsChecking, setIsDnsChecking] = useState(false);
+    const [isCalcImportance, setIsCalcImportance] = useState(false);
+    const [verificationStatus, setVerificationStatus] = useState(contact.verificationStatus || 'Unknown');
+    const [emailValid, setEmailValid] = useState(contact.emailValid || 'Unknown');
+    const [importanceScore, setImportanceScore] = useState(contact.importanceScore || 0);
+    const [lastVerified, setLastVerified] = useState(contact.lastVerifiedAt || '');
 
-    // Controlled Inputs State (Fixes jumping issues)
     // Controlled Inputs State (Fixes jumping issues)
     const [tagsValue, setTagsValue] = useState(contact.tags?.join(', ') || '');
     const [aiSummaryValue, setAiSummaryValue] = useState(contact.aiSummary || '');
@@ -101,6 +107,47 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
         } finally {
             setIsTagging(false);
         }
+    };
+
+    const handleVerifyStaleness = async () => {
+        setIsVerifying(true);
+        try {
+            const res = await verifyStalenessAction(contact.id);
+            if (res.success) {
+                setVerificationStatus(res.status);
+                setLastVerified(new Date().toISOString().split('T')[0]);
+                alert(`驗證結果: ${res.status}\n${res.evidence || ''}`);
+            } else {
+                alert('驗證失敗: ' + res.error);
+            }
+        } catch (e) { alert('驗證發生錯誤'); }
+        finally { setIsVerifying(false); }
+    };
+
+    const handleDnsCheck = async () => {
+        setIsDnsChecking(true);
+        try {
+            const res = await verifyEmailDNSAction(contact.id);
+            if (res.success) {
+                setEmailValid(res.result);
+                alert(`Email DNS 驗證: ${res.result}`);
+            }
+        } catch (e) { alert('DNS 檢查失敗'); }
+        finally { setIsDnsChecking(false); }
+    };
+
+    const handleCalcImportance = async () => {
+        setIsCalcImportance(true);
+        try {
+            const res = await calculateImportanceAction(contact.id);
+            if (res.success) {
+                setImportanceScore(res.score);
+                alert(`重要度: ${res.score}/100\n${res.reason || ''}`);
+            } else {
+                alert('計算失敗: ' + res.error);
+            }
+        } catch (e) { alert('計算發生錯誤'); }
+        finally { setIsCalcImportance(false); }
     };
 
     const handleSmartUpdate = async () => {
@@ -433,6 +480,82 @@ export default function EditContactModal({ contact, isOpen, onClose, availableTa
                                             className="w-full bg-[#5e52ff]/5 border border-[#5e52ff]/10 rounded-2xl px-5 py-4 text-gray-200 focus:outline-none focus:border-[#5e52ff] transition-all text-sm leading-relaxed resize-none"
                                             placeholder="AI generated background info (You can also write your own notes here)..."
                                         />
+                                    </div>
+
+                                    {/* Verification Panel */}
+                                    <div className="space-y-4 pt-8 border-t border-white/5 mt-8">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 border-l-2 border-emerald-500">Verification & Intelligence</p>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                            {/* Staleness Check */}
+                                            <div className="bg-[#13151b] border border-white/5 rounded-xl p-4 space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase">Status</p>
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                        verificationStatus === 'Fresh' ? 'bg-emerald-500/10 text-emerald-500' :
+                                                        verificationStatus === 'Stale' ? 'bg-amber-500/10 text-amber-500' :
+                                                        verificationStatus === 'Mismatch' ? 'bg-red-500/10 text-red-400' :
+                                                        'bg-gray-500/10 text-gray-500'
+                                                    }`}>
+                                                        {verificationStatus}
+                                                    </span>
+                                                </div>
+                                                {lastVerified && <p className="text-[10px] text-gray-600">Last: {lastVerified}</p>}
+                                                <button
+                                                    type="button"
+                                                    onClick={handleVerifyStaleness}
+                                                    disabled={isVerifying}
+                                                    className="w-full flex items-center justify-center gap-1.5 text-[10px] bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-2 rounded-lg transition-all font-bold border border-emerald-500/20"
+                                                >
+                                                    {isVerifying ? <Loader2 size={12} className="animate-spin" /> : <SearchIcon size={12} />}
+                                                    {isVerifying ? 'Verifying...' : 'Verify'}
+                                                </button>
+                                            </div>
+
+                                            {/* Email DNS */}
+                                            <div className="bg-[#13151b] border border-white/5 rounded-xl p-4 space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase">Email DNS</p>
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                        emailValid === 'Valid' ? 'bg-emerald-500/10 text-emerald-500' :
+                                                        emailValid === 'Invalid' ? 'bg-red-500/10 text-red-400' :
+                                                        'bg-gray-500/10 text-gray-500'
+                                                    }`}>
+                                                        {emailValid === 'Valid' && <ShieldCheck size={10} className="inline mr-1" />}
+                                                        {emailValid === 'Invalid' && <ShieldAlert size={10} className="inline mr-1" />}
+                                                        {emailValid}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleDnsCheck}
+                                                    disabled={isDnsChecking}
+                                                    className="w-full flex items-center justify-center gap-1.5 text-[10px] bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white px-3 py-2 rounded-lg transition-all font-bold border border-blue-500/20"
+                                                >
+                                                    {isDnsChecking ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
+                                                    {isDnsChecking ? 'Checking...' : 'Check DNS'}
+                                                </button>
+                                            </div>
+
+                                            {/* Importance Score */}
+                                            <div className="bg-[#13151b] border border-white/5 rounded-xl p-4 space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase">Importance</p>
+                                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 flex items-center gap-1">
+                                                        <Star size={10} /> {importanceScore}/100
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleCalcImportance}
+                                                    disabled={isCalcImportance}
+                                                    className="w-full flex items-center justify-center gap-1.5 text-[10px] bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-white px-3 py-2 rounded-lg transition-all font-bold border border-amber-500/20"
+                                                >
+                                                    {isCalcImportance ? <Loader2 size={12} className="animate-spin" /> : <Star size={12} />}
+                                                    {isCalcImportance ? 'Calculating...' : 'Recalculate'}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </form>
