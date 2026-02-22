@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "preinstall": "bash scripts/icloud-nosync.sh",
+    "dev": "bash scripts/icloud-nosync.sh && next dev",
+    "build": "bash scripts/icloud-nosync.sh && next build",
     "start": "next start",
     "lint": "next lint",
     "pull": "node .agent/skills/namecard/scripts/pull-data.js",
